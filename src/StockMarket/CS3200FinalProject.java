@@ -83,7 +83,7 @@ public class CS3200FinalProject {
       }
     }
     try {
-      // EXAMPLE UPDATE
+      // EXAMPLE UPDATE (INSERT)
       if (executeUpdate(conn, "INSERT INTO Company VALUES ('Google', 'John " +
               "Buschman'," +
               "600)")) {
@@ -93,7 +93,7 @@ public class CS3200FinalProject {
       // EXAMPLE QUERY
       ResultSet rs1 = executeQuery(conn, "SELECT * FROM Company;");
       
-      // RESET THE DATABASE
+      // RESET THE DATABASE (DELETE FROM)
       if (executeUpdate(conn, "DELETE FROM Company WHERE Company_name = 'Google';")) {
         System.out.println("Update successful");
       }
