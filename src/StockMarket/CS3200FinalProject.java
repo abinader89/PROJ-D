@@ -102,8 +102,8 @@ public class CS3200FinalProject {
       ResultSetMetaData rsmd = rs1.getMetaData();
       int columnsNumber = rsmd.getColumnCount();
       while (rs1.next()) {
-        for (int i = 2; i <= columnsNumber; i++) {
-          if (i > 2) System.out.print(",  ");
+        for (int i = 1; i <= columnsNumber; i++) {
+          if (i > 1) System.out.print(",  ");
           String columnValue = rs1.getString(i);
           System.out.print(rsmd.getColumnName(i) + " " + columnValue);
         }
