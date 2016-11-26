@@ -119,7 +119,6 @@ public class CS3200FinalProject {
     } catch (SQLException e1) {
       e1.printStackTrace();
     }
-    return;
   }
 }
 
