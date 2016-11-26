@@ -82,29 +82,44 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
-      try {
-        ResultSet rs1 = executeQuery(conn, "SELECT * FROM Company;");
-        ResultSetMetaData rsmd = rs1.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
-        while (rs1.next()) {
-          for (int i = 2; i <= columnsNumber; i++) {
-            if (i > 2) System.out.print(",  ");
-            String columnValue = rs1.getString(i);
-            System.out.print(rsmd.getColumnName(i) + " " + columnValue);
-          }
-          System.out.println("");
-        }
-      } catch (SQLException e) {
-        System.out.println("ERROR: Could not execute the command");
-        e.printStackTrace();
-        try {
-          conn.close();
-          System.out.println("Connection closed.");
-        } catch (SQLException e1) {
-          e1.printStackTrace();
-        }
-        return;
+    try {
+      // EXAMPLE UPDATE
+      if (executeUpdate(conn, "INSERT INTO Company VALUES ('Google', 'John " +
+              "Buschman'," +
+              "600)")) {
+        System.out.println("Update successful");
       }
+      
+      // EXAMPLE QUERY
+      ResultSet rs1 = executeQuery(conn, "SELECT * FROM Company;");
+      
+      // RESET THE DATABASE
+      if (executeUpdate(conn, "DELETE FROM Company WHERE Company_name = 'Google';")) {
+        System.out.println("Update successful");
+      }
+      
+      // SHOW THE RESULTS
+      ResultSetMetaData rsmd = rs1.getMetaData();
+      int columnsNumber = rsmd.getColumnCount();
+      while (rs1.next()) {
+        for (int i = 2; i <= columnsNumber; i++) {
+          if (i > 2) System.out.print(",  ");
+          String columnValue = rs1.getString(i);
+          System.out.print(rsmd.getColumnName(i) + " " + columnValue);
+        }
+        System.out.println("");
+      }
+    } catch (SQLException e){
+      System.out.println("ERROR: Could not execute the command");
+      e.printStackTrace();
     }
+    try {
+      conn.close();
+      System.out.println("Connection closed.");
+    } catch (SQLException e1) {
+      e1.printStackTrace();
+    }
+    return;
   }
+}
 
