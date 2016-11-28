@@ -144,6 +144,22 @@ INSERT INTO Stock_Prices VALUES
 ('PRU', NOW(), 99.15);
 
 	
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS update_stock//
+CREATE PROCEDURE update_stock
+(
+	stock_ID  VARCHAR(10),
+    new_price DOUBLE
+)
+BEGIN
+UPDATE Stock_Prices
+	SET Date_of = now(), Price = new_price
+	WHERE company_ID = stock_ID;
+END
+//
+
+
 
 
 
