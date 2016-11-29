@@ -133,10 +133,13 @@ public class CS3200FinalProject {
         this.disconnect(conn);
         break;
       }
-      System.out.println("Input Arguments:\n");
-      this.commandArgs = commandArgsReader.nextLine();
-      // EXECUTE FUNCTIONS WITH NEXT COMMAND
-
+      if (this.nextCommand == "some command that requires arguments") {
+        System.out.println("Input Arguments:\n");
+        this.commandArgs = commandArgsReader.nextLine();
+        // EXECUTE FUNCTIONS WITH NEXT COMMAND
+      } else {
+        // RUN THE COMMAND WITHOUT ARGUMENTS
+      }
     }
   }
   
