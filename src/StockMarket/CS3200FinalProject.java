@@ -13,6 +13,8 @@ import java.util.Scanner;
  * Created by Abinader on 11/22/16.
  */
 public class CS3200FinalProject {
+  // AT THE END OF A BUY/SELL THIS NUMBER IS INCREMENTED
+  private int dayIncrementer = 0;
   private String userName;
   private String password;
   private Scanner reader = new Scanner(System.in);
@@ -22,6 +24,7 @@ public class CS3200FinalProject {
   
   /**
    * Get a new database connection
+   *
    * @return Connection
    */
   public Connection getConnection() throws SQLException {
@@ -82,22 +85,19 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
+  
     try {
       // EXAMPLE UPDATE (INSERT)
-      if (executeUpdate(conn, "INSERT INTO Company VALUES ('Google', 'John " +
-              "Buschman'," +
-              "600)")) {
-        System.out.println("Update successful");
-      }
-      
-      // EXAMPLE QUERY
-      ResultSet rs1 = executeQuery(conn, "SELECT * FROM Company;");
-      
-      // RESET THE DATABASE (DELETE FROM)
-      if (executeUpdate(conn, "DELETE FROM Company WHERE Company_name = 'Google';")) {
-        System.out.println("Update successful");
-      }
-      
+      this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Rob', 20, 500);");
+      this.executeUpdate(conn, "INSERT INTO Traders VALUES ('George', 2, 15);");
+      this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Prannoy', 60, 2000);");
+    } catch (SQLException e0) {
+      // DO NOTHING
+    }
+    // Interact with the program
+    System.out.println("CHOOSE ONE OF THE FOLLOWING: \n ");
+    try {
+      ResultSet rs1 = executeQuery(conn, "SELECT Trader_Name FROM Traders;");
       // SHOW THE RESULTS
       ResultSetMetaData rsmd = rs1.getMetaData();
       int columnsNumber = rsmd.getColumnCount();
@@ -109,10 +109,10 @@ public class CS3200FinalProject {
         }
         System.out.println("");
       }
-    } catch (SQLException e){
+    } catch (SQLException e1) {
       System.out.println("ERROR: Could not execute the command");
-      e.printStackTrace();
     }
+  
     try {
       conn.close();
       System.out.println("Connection closed.");
@@ -121,4 +121,8 @@ public class CS3200FinalProject {
     }
   }
 }
+      
+    
+  
+
 
