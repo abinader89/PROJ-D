@@ -3,20 +3,21 @@ package StockMarket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
 /**
  * Created by Abinader on 11/22/16.
+ * This is the Program that is going to get us an A. I am unsure exactly what it does.
  */
 public class CS3200FinalProject {
-  // AT THE END OF A BUY/SELL THIS NUMBER IS INCREMENTED
-  private int dayIncrementer = 0;
   private String userName;
   private String password;
+  private String investor;
   private Scanner reader = new Scanner(System.in);
   private final String serverName = "localhost";
   private final int portNumber = 3306;
@@ -85,34 +86,45 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
-  
+    
     try {
-      // EXAMPLE UPDATE (INSERT)
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Rob', 20, 500);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('George', 2, 15);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Prannoy', 60, 2000);");
     } catch (SQLException e0) {
-      // DO NOTHING
+      // DO NOTHING BUT CONTINUE
     }
-    // Interact with the program
-    System.out.println("CHOOSE ONE OF THE FOLLOWING: \n ");
-    try {
-      ResultSet rs1 = executeQuery(conn, "SELECT Trader_Name FROM Traders;");
-      // SHOW THE RESULTS
-      ResultSetMetaData rsmd = rs1.getMetaData();
-      int columnsNumber = rsmd.getColumnCount();
-      while (rs1.next()) {
-        for (int i = 1; i <= columnsNumber; i++) {
-          if (i > 1) System.out.print(", ");
-          String columnValue = rs1.getString(i);
-          System.out.print(rsmd.getColumnName(i) + " " + columnValue);
+    while (true) {
+      // Interact with the program
+      System.out.println("Choose one of the following investors in the database:");
+      try {
+        ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders;");
+        // SHOW THE RESULTS
+        List<String> legalNames = new ArrayList<>();
+        while (rs1.next()) {
+          String name = rs1.getString("Trader_name");
+          legalNames.add(name);
         }
-        System.out.println("");
+        System.out.println(legalNames.toString());
+        this.investor = reader.next();
+        if (legalNames.contains(this.investor)) {
+          System.out.println(this.investor + " selected");
+          break;
+        } else {
+          System.out.println("Investor not found!\n");
+        }
+      } catch (SQLException e1) {
+        System.out.println("ERROR: Could not execute the command");
       }
-    } catch (SQLException e1) {
-      System.out.println("ERROR: Could not execute the command");
     }
-  
+    
+    while (true) {
+      // EXECUTE FUNCTIONS
+      if (true) {
+        // EXIT FUNCTION IS INVOKED
+        break;
+      }
+    }
     try {
       conn.close();
       System.out.println("Connection closed.");
@@ -121,8 +133,6 @@ public class CS3200FinalProject {
     }
   }
 }
-      
-    
   
 
 
