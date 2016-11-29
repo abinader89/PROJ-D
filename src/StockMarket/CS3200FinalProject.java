@@ -69,9 +69,11 @@ public class CS3200FinalProject {
   }
   
   /**
-   * Connect to MySQL and run specified commands.
+   * Connect to MySQL and run specified commands based on user input.
+   *
+   * @throws SQLException If something goes wrong
    */
-  public void run() {
+  public void run() throws SQLException {
     // Connect to MySQL
     Connection conn;
     while (true) {
