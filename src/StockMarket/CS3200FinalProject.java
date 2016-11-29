@@ -13,7 +13,7 @@ import java.util.Scanner;
 /**
  * Created by Abinader on 11/22/16.
  * This class represents the program that will simulate a stock market trading game. Optimally,
- * this will update its data on companies from a free stock api online.
+ * this will update its data on companies from a free stock trader api online.
  */
 public class CS3200FinalProject {
   private String userName;
