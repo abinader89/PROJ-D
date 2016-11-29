@@ -18,6 +18,7 @@ public class CS3200FinalProject {
   private String userName;
   private String password;
   private String investor;
+  private String nextCommand;
   private Scanner reader = new Scanner(System.in);
   private final String serverName = "localhost";
   private final int portNumber = 3306;
@@ -117,14 +118,13 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Could not execute the command");
       }
     }
-    
+    // FINALLY EXECUTE SOME FUNCTIONS/PROCEDURES
     while (true) {
-      // EXECUTE FUNCTIONS
-      if (true) {
-        // EXIT FUNCTION IS INVOKED
-        break;
+      System.out.println("Input Command:\n");
+      this.nextCommand = reader.next();
+        // EXECUTE FUNCTIONS WITH NEXT COMMAND
+      break;
       }
-    }
     try {
       conn.close();
       System.out.println("Connection closed.");
