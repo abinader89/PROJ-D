@@ -12,7 +12,8 @@ import java.util.Scanner;
 
 /**
  * Created by Abinader on 11/22/16.
- * This is the Program that is going to get us an A. I am unsure exactly what it does.
+ * This class represents the program that will simulate a stock market trading game. Optimally,
+ * this will update its data on companies from a free stock api online.
  */
 public class CS3200FinalProject {
   private String userName;
@@ -87,19 +88,20 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
+    
+    // INSERT VALUES INTO TRADERS TABLE
     try {
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Rob', 20, 500);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('George', 2, 15);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Prannoy', 60, 2000);");
     } catch (SQLException e) {
-      // DO NOTHING BUT CONTINUE
+      // IF VALUES ALREADY EXIST, DO NOTHING BUT CONTINUE
     }
     while (true) {
-      // Interact with the program
+      // CHOOSE YOUR INVESTOR
       System.out.println("Choose one of the following investors in the database:");
       try {
         ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders;");
-        // SHOW THE RESULTS
         List<String> legalNames = new ArrayList<>();
         while (rs1.next()) {
           String name = rs1.getString("Trader_name");
@@ -125,6 +127,8 @@ public class CS3200FinalProject {
         // EXECUTE FUNCTIONS WITH NEXT COMMAND
       break;
       }
+      
+      // DISCONNECT FROM THE SERVER WHEN FINISHED
     try {
       conn.close();
       System.out.println("Connection closed.");

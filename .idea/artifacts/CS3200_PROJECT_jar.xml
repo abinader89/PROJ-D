@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="CS3200-PROJECT:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CS3200_PROJECT_jar</output-path>
+    <root id="root">
+      <element id="archive" name="CS3200-PROJECT.jar">
+        <element id="module-output" name="CS3200-PROJECT" />
+      </element>
+      <element id="library" level="project" name="mysql-connector-java-5.1.40-bin" />
+      <element id="library" level="project" name="lib" />
+    </root>
+  </artifact>
+</component>
