@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 import StockMarket.CS3200FinalProject;
 
 /**
@@ -6,6 +8,10 @@ import StockMarket.CS3200FinalProject;
 public class MainRunner {
   public static void main(String[] args) {
     CS3200FinalProject app = new CS3200FinalProject();
-    app.run();
+    try {
+      app.run();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

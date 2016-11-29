@@ -20,7 +20,9 @@ public class CS3200FinalProject {
   private String password;
   private String investor;
   private String nextCommand;
+  private String commandArgs;
   private Scanner reader = new Scanner(System.in);
+  private Scanner commandArgsReader = new Scanner(System.in);
   private final String serverName = "localhost";
   private final int portNumber = 3306;
   private final String dbName = "StockMarket";
@@ -86,7 +88,6 @@ public class CS3200FinalProject {
         System.out.println("Connected to database");
         break;
       } catch (SQLException e) {
-        e.printStackTrace();
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
@@ -105,12 +106,14 @@ public class CS3200FinalProject {
       try {
         ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders;");
         List<String> legalNames = new ArrayList<>();
+        List<String> displayNames = new ArrayList<>();
         while (rs1.next()) {
           String name = rs1.getString("Trader_name");
-          legalNames.add(name);
+          legalNames.add(name.toLowerCase());
+          displayNames.add(name);
         }
-        System.out.println(legalNames.toString());
-        this.investor = reader.next();
+        System.out.println(displayNames.toString());
+        this.investor = reader.next().toLowerCase();
         if (legalNames.contains(this.investor)) {
           System.out.println(this.investor + " selected");
           break;
@@ -125,15 +128,27 @@ public class CS3200FinalProject {
     // FINALLY EXECUTE SOME FUNCTIONS/PROCEDURES
     while (true) {
       System.out.println("Input Command:\n");
-      this.nextCommand = reader.next();
-        // EXECUTE FUNCTIONS WITH NEXT COMMAND
-      break;
+      this.nextCommand = reader.next().toLowerCase();
+      if (this.nextCommand.equals("quit")) {
+        this.disconnect(conn);
+        break;
       }
-      
-      // DISCONNECT FROM THE SERVER WHEN FINISHED
+      System.out.println("Input Arguments:\n");
+      this.commandArgs = commandArgsReader.nextLine();
+      // EXECUTE FUNCTIONS WITH NEXT COMMAND
+
+    }
+  }
+  
+  /**
+   * Disconnects from the server.
+   * @param conn Connection
+   */
+  private void disconnect(Connection conn) {
+    // DISCONNECT FROM THE SERVER WHEN FINISHED
     try {
       conn.close();
-      System.out.println("Connection closed.");
+      System.out.println("Server quit.");
     } catch (SQLException e) {
       e.printStackTrace();
     }
