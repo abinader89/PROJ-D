@@ -87,12 +87,11 @@ public class CS3200FinalProject {
         System.out.println("ERROR: Credentials not verified!\nTry again.\n");
       }
     }
-    
     try {
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Rob', 20, 500);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('George', 2, 15);");
       this.executeUpdate(conn, "INSERT INTO Traders VALUES ('Prannoy', 60, 2000);");
-    } catch (SQLException e0) {
+    } catch (SQLException e) {
       // DO NOTHING BUT CONTINUE
     }
     while (true) {
@@ -114,8 +113,9 @@ public class CS3200FinalProject {
         } else {
           System.out.println("Investor not found!\n");
         }
-      } catch (SQLException e1) {
+      } catch (SQLException e) {
         System.out.println("ERROR: Could not execute the command");
+        e.printStackTrace();
       }
     }
     // FINALLY EXECUTE SOME FUNCTIONS/PROCEDURES
@@ -128,8 +128,8 @@ public class CS3200FinalProject {
     try {
       conn.close();
       System.out.println("Connection closed.");
-    } catch (SQLException e1) {
-      e1.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 }
