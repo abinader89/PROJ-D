@@ -44,6 +44,9 @@ import java.util.*;
  */
 public class StockMarket {
 
+  Readable r = new InputStreamReader(System.in);
+  Scanner sc = new Scanner(r);
+
   /** The name of the MySQL account to use (or empty for anonymous) */
   private String userName;
 
@@ -64,10 +67,11 @@ public class StockMarket {
 
   private Connection conn;
 
+  private String stockURL = "https://www.google.com/finance/info?q=NSE:BABA,CVS,BMY,MRK,XOM,TGT," +
+          "DOW,TWX,TSN,CBS,APA,MSFT,V,WMT,PG,CRM,COI,NVS,PRU,AAPL,GOOG,AMZN,C";
+
   public StockMarket()  {
     try  {
-      Readable r = new InputStreamReader(System.in);
-      Scanner sc = new Scanner(r);
       boolean keepGoing = true;
       System.out.println("What is your username?");
       this.userName = sc.next();
@@ -116,12 +120,25 @@ public class StockMarket {
     }
   }
 
+  void priceUpdate()  {
+    try {
+      String stockInfo = StockAPIConnection.cleanURLJson(StockAPIConnection.getText(stockURL));
+      ArrayList<StockPrice> newPrices = StockAPIConnection.stockFromJSON(stockInfo);
+      for (StockPrice s : newPrices)  {
+        String command = "CALL update_stock(" + "'" + s.company + "', " + s.price + ")";
+        this.executeUpdate(this.conn, command);
+      }
+    }
+    catch (Exception e)  {
+      System.out.println("Update failed");
+    }
+  }
+
+
   /**
    * Connect to MySQL and run specified commands.
    */
   public void run() {
-    Readable r = new InputStreamReader(System.in);
-    Scanner sc = new Scanner(r);
     boolean keepGoing = true;
     while (keepGoing) {
       System.out.println("Welcome to StockMarket. User or Admin?");
@@ -131,7 +148,6 @@ public class StockMarket {
           keepGoing = false;
           break;
         case "admin":
-
           keepGoing = false;
           break;
         case "exit":
@@ -143,35 +159,62 @@ public class StockMarket {
   }
 
   public void userStart()  {
-    Readable r = new InputStreamReader(System.in);
-    Scanner sc = new Scanner(r);
     boolean keepGoing = true;
     while (keepGoing)  {
       keepGoing = false;
       System.out.println("Create a new league or use existing?");
       String response = sc.next().toLowerCase();
+      isExit(response);
       switch (response)  {
         case "new":
           this.createLeague();
           break;
         case "existing":
 
-          return;
-        case "exit":
-          return;
+          break;
         default:
           keepGoing = true;
       }
-      System.out.println("Please choose either an existing or new league, " +
-              "or type 'exit' to leave.");
+      System.out.println("Please choose either existing or new league");
     }
-
   }
 
   public void createLeague()  {
-
+    System.out.println("League name?");
+    String name = sc.next();
+    List<String> players = new ArrayList<String>();
+    System.out.println("First trader name?");
+    players.add(sc.next());
+    boolean keepGoing = true;
+    while (true)  {
+      System.out.println("Next trader name?");
+      String newName = sc.next();
+      if (newName.toLowerCase().equals("done"))  {
+        break;
+      }
+      players.add(newName);
+    }
+    System.out.println("Traders added");
+    System.out.println("Return to begining or exit?");
+    String response = sc.next();
+    if (response.equalsIgnoreCase("return"))  {
+      this.userStart();
+      return;
+    }
+    else  {
+      System.out.println("Thanks for playing!");
+      return;
+    }
   }
 
+  public void existingLeague()  {
+    String traderName;
+    System.out.println("What is your trader name?");
+    traderName = sc.next();
+    isExit(traderName);
+    System.out.println("Get stats or make a trade?");
+    String action = sc.next();
+  }
 
   /**
    * Run a SQL Query:
@@ -184,6 +227,13 @@ public class StockMarket {
     return stmt.executeQuery(command);
   }
 
+  static void isExit(String message)  {
+    if (message.equalsIgnoreCase("exit"))  {
+      System.out.println("Goodbye");
+      System.exit(1);
+    }
+  }
+
   /**
    * Connect to the DB and do some stuff
    */
@@ -192,3 +242,5 @@ public class StockMarket {
     app.run();
   }
 }
+
+
