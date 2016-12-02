@@ -1,3 +1,5 @@
+package StockMarketGame;
+
 /**
  * Created by robertcarney on 12/1/16.
  */

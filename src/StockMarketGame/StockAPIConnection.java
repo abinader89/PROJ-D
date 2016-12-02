@@ -1,3 +1,5 @@
+package StockMarketGame;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -28,7 +30,7 @@ public class StockAPIConnection {
   }
 
 
-  private static String cleanURLJson(String urlText)  {
+  public static String cleanURLJson(String urlText)  {
     return urlText.substring(4, urlText.length() - 1);
   }
 

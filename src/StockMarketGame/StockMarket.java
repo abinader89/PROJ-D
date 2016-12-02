@@ -1,14 +1,13 @@
-/**
- * Created by robertcarney on 11/12/16.
- */
+package StockMarketGame;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+
+import static StockMarketGame.StockAPIConnection.cleanURLJson;
 
 /**
  * This class demonstrates how to connect to MySQL and run some basic commands.
@@ -43,54 +42,57 @@ import java.util.*;
  * java.net.ConnectException: Connection refused
  */
 public class StockMarket {
-
+  
   Readable r = new InputStreamReader(System.in);
   Scanner sc = new Scanner(r);
-
-  /** The name of the MySQL account to use (or empty for anonymous) */
+  
+  // The name of the MySQL account to use (or empty for anonymous)
   private String userName;
-
-  /** The password for the MySQL account (or empty for anonymous) */
+  
+  // The password for the MySQL account (or empty for anonymous)
   private String password;
-
-  /** Name of character, dependent on user input */
+  
+  // Name of character, dependent on user input
   private String characterName;
-
-  /** The name of the computer running MySQL */
+  
+  // The name of the computer running MySQL
   private final String serverName = "localhost";
-
-  /** The port of the MySQL server (default is 3306) */
+  
+  // The port of the MySQL server (default is 3306)
   private final int portNumber = 3306;
-
-  /** The name of the database we are testing with (this default is installed with MySQL) */
+  
+  // The name of the database we are testing with (this default is installed with MySQL)
   private final String dbName = "StockMarket";
-
+  
   private Connection conn;
-
+  
   private String stockURL = "https://www.google.com/finance/info?q=NSE:BABA,CVS,BMY,MRK,XOM,TGT," +
           "DOW,TWX,TSN,CBS,APA,MSFT,V,WMT,PG,CRM,COI,NVS,PRU,AAPL,GOOG,AMZN,C";
-
+  
   public StockMarket()  {
-    try  {
-      boolean keepGoing = true;
-      System.out.println("What is your username?");
-      this.userName = sc.next();
-      System.out.println("What is your password?");
-      this.password = sc.next();
-      this.conn = this.getConnection();
-    } catch (Exception e)  {
-
+    boolean keepGoing = true;
+    while (keepGoing) {
+      try {
+        System.out.println("What is your username?");
+        this.userName = sc.next();
+        System.out.println("What is your password?");
+        this.password = sc.next();
+        this.conn = this.getConnection();
+        keepGoing = false;
+      } catch (Exception e) {
+        // HANDLE
+      }
     }
   }
-
+  
   /**
    * Get a new database connection
    *
-   * @return
+   * @return Connection
    * @throws SQLException
    */
   public Connection getConnection() throws SQLException {
-    Connection conn = null;
+    Connection conn;
     Properties connectionProps = new Properties();
     connectionProps.put("user", this.userName);
     connectionProps.put("password", this.password);
@@ -100,7 +102,7 @@ public class StockMarket {
             connectionProps);
     return conn;
   }
-
+  
   /**
    * Run a SQL command which does not return a recordset:
    * CREATE/INSERT/UPDATE/DELETE/DROP/etc.
@@ -114,15 +116,15 @@ public class StockMarket {
       stmt.executeUpdate(command); // This will throw a SQLException if it fails
       return true;
     } finally {
-
+      
       // This will run whether we throw an exception or not
       if (stmt != null) { stmt.close(); }
     }
   }
-
+  
   void priceUpdate()  {
     try {
-      String stockInfo = StockAPIConnection.cleanURLJson(StockAPIConnection.getText(stockURL));
+      String stockInfo = cleanURLJson(StockAPIConnection.getText(stockURL));
       ArrayList<StockPrice> newPrices = StockAPIConnection.stockFromJSON(stockInfo);
       for (StockPrice s : newPrices)  {
         String command = "CALL update_stock(" + "'" + s.company + "', " + s.price + ")";
@@ -133,15 +135,15 @@ public class StockMarket {
       System.out.println("Update failed");
     }
   }
-
-
+  
+  
   /**
    * Connect to MySQL and run specified commands.
    */
   public void run() {
     boolean keepGoing = true;
     while (keepGoing) {
-      System.out.println("Welcome to StockMarket. User or Admin?");
+      System.out.println("Welcome to StockMarketGame. User or Admin?");
       switch (sc.next().toLowerCase())  {
         case "user":
           this.userStart();
@@ -157,20 +159,20 @@ public class StockMarket {
       }
     }
   }
-
+  
   public void userStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
       keepGoing = false;
       System.out.println("Create a new league or use existing?");
       String response = sc.next().toLowerCase();
-      isExit(response);
+      this.isExit(response);
       switch (response)  {
         case "new":
           this.createLeague();
           break;
         case "existing":
-
+          this.chooseLeague();
           break;
         default:
           keepGoing = true;
@@ -178,35 +180,68 @@ public class StockMarket {
       System.out.println("Please choose either existing or new league");
     }
   }
-
-  public void createLeague()  {
+  
+  private void chooseLeague() {
+    System.out.println("Choose a League:");
+    String name = sc.next();
+    List<String> leagues = new ArrayList<String>();
+    try {
+      ResultSet rs = executeQuery(conn, "SELECT Team_name FROM League;");
+      List<String> legalNames = new ArrayList<>();
+      List<String> displayNames = new ArrayList<>();
+      while (rs.next()) {
+        String leagueName = rs.getString("League_name");
+        legalNames.add(leagueName.toLowerCase());
+        displayNames.add(leagueName);
+      }
+      System.out.println("\n" + displayNames.toString());
+    } catch (SQLException e) {
+      // HANDLE
+    }
+  }
+  
+  public void createLeague() {
     System.out.println("League name?");
     String name = sc.next();
     List<String> players = new ArrayList<String>();
     System.out.println("First trader name?");
     players.add(sc.next());
     boolean keepGoing = true;
-    while (true)  {
+    while (true) {
       System.out.println("Next trader name?");
       String newName = sc.next();
-      if (newName.toLowerCase().equals("done"))  {
+      if (newName.toLowerCase().equals("done")) {
         break;
       }
       players.add(newName);
     }
-    System.out.println("Traders added");
-    System.out.println("Return to begining or exit?");
-    String response = sc.next();
-    if (response.equalsIgnoreCase("return"))  {
-      this.userStart();
-      return;
+    // ADD A LEAGUE TO THE DATABASE
+    try {
+      StringBuilder insertLeague = new StringBuilder("INSERT INTO League VALUES("
+             + "'" + name + "'" + ", " + "'" + players.get(0) + "'" + ")");
+      for (int ii = 1; ii < players.size(); ii++) {
+        insertLeague.append(", (" + "'" + name + "'" +  ", " + "'" + players.get(ii) + "'" + ")");
+        if (ii == players.size() - 1) {
+          insertLeague.append(";");
+        }
+      }
+      System.out.println(insertLeague.toString());
+      this.executeUpdate(this.conn, insertLeague.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    else  {
-      System.out.println("Thanks for playing!");
-      return;
+      System.out.println("Traders added");
+      System.out.println("Enter 'return' to select a league or enter any other key to exit.");
+      String response = sc.next();
+      if (response.equalsIgnoreCase("return")) {
+        this.userStart();
+        return;
+      } else {
+        System.out.println("Thanks for playing!");
+        return;
+      }
     }
-  }
-
+  
   public void existingLeague()  {
     String traderName;
     System.out.println("What is your trader name?");
@@ -215,7 +250,7 @@ public class StockMarket {
     System.out.println("Get stats or make a trade?");
     String action = sc.next();
   }
-
+  
   /**
    * Run a SQL Query:
    * SELECT
@@ -226,16 +261,16 @@ public class StockMarket {
     Statement stmt = conn.createStatement();
     return stmt.executeQuery(command);
   }
-
+  
   static void isExit(String message)  {
     if (message.equalsIgnoreCase("exit"))  {
       System.out.println("Goodbye");
-      System.exit(1);
+      System.exit(0);
     }
   }
-
+  
   /**
-   * Connect to the DB and do some stuff
+   * Connect to the Database and execute commands.
    */
   public static void main(String[] args) {
     StockMarket app = new StockMarket();
