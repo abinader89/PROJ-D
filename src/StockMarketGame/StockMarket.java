@@ -86,6 +86,24 @@ public class StockMarket {
   }
   
   /**
+   * Enum representing the permissions granted to the current user.
+   */
+  private enum Permissions {
+    USER("user"), ADMIN("admin");
+    
+    private String stringRep;
+    
+    Permissions(String str) {
+      this.stringRep = str;
+    }
+    
+    public String toString() {
+      return this.stringRep;
+    }
+    
+    
+  }
+  /**
    * Get a new database connection
    *
    * @return Connection
@@ -120,6 +138,17 @@ public class StockMarket {
       // This will run whether we throw an exception or not
       if (stmt != null) { stmt.close(); }
     }
+  }
+  
+  /**
+   * Run a SQL Query:
+   * SELECT
+   *
+   * @throws SQLException If something goes wrong
+   */
+  public ResultSet executeQuery(Connection conn, String command) throws SQLException {
+    Statement stmt = conn.createStatement();
+    return stmt.executeQuery(command);
   }
   
   void priceUpdate()  {
@@ -172,31 +201,12 @@ public class StockMarket {
           this.createLeague();
           break;
         case "existing":
-          this.chooseLeague();
+          this.existingLeague();
           break;
         default:
           keepGoing = true;
       }
       System.out.println("Please choose either existing or new league");
-    }
-  }
-  
-  private void chooseLeague() {
-    System.out.println("Choose a League:");
-    String name = sc.next();
-    List<String> leagues = new ArrayList<String>();
-    try {
-      ResultSet rs = executeQuery(conn, "SELECT Team_name FROM League;");
-      List<String> legalNames = new ArrayList<>();
-      List<String> displayNames = new ArrayList<>();
-      while (rs.next()) {
-        String leagueName = rs.getString("League_name");
-        legalNames.add(leagueName.toLowerCase());
-        displayNames.add(leagueName);
-      }
-      System.out.println("\n" + displayNames.toString());
-    } catch (SQLException e) {
-      // HANDLE
     }
   }
   
@@ -242,24 +252,28 @@ public class StockMarket {
       }
     }
   
-  public void existingLeague()  {
+  public void existingLeague() {
     String traderName;
     System.out.println("What is your trader name?");
     traderName = sc.next();
     isExit(traderName);
     System.out.println("Get stats or make a trade?");
     String action = sc.next();
-  }
-  
-  /**
-   * Run a SQL Query:
-   * SELECT
-   *
-   * @throws SQLException If something goes wrong
-   */
-  public ResultSet executeQuery(Connection conn, String command) throws SQLException {
-    Statement stmt = conn.createStatement();
-    return stmt.executeQuery(command);
+    boolean keepGoing = true;
+    while (keepGoing) {
+      switch (action) {
+        case "stats":
+          // DO SOMETHING
+//          this.checkStats(traderName);
+        case "trade":
+          // DO SOMETHING
+//          this.trade(traderName);
+        case "logout":
+          // DO SOMETHING
+          keepGoing = false;
+        default: // REPEAT
+      }
+    }
   }
   
   static void isExit(String message)  {

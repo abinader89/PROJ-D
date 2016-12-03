@@ -3,7 +3,6 @@ CREATE DATABASE IF NOT EXISTS StockMarket;
 USE StockMarket;
 
 /*
-
 trader names as well as the traders returns and its available funds
 */
 DROP TABLE IF EXISTS Traders;
