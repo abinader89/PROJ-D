@@ -100,8 +100,6 @@ public class StockMarket {
     public String toString() {
       return this.stringRep;
     }
-    
-    
   }
   /**
    * Get a new database connection
@@ -263,14 +261,12 @@ public class StockMarket {
     while (keepGoing) {
       switch (action) {
         case "stats":
-          // DO SOMETHING
 //          this.checkStats(traderName);
         case "trade":
-          // DO SOMETHING
 //          this.trade(traderName);
         case "logout":
-          // DO SOMETHING
           keepGoing = false;
+          this.userStart();
         default: // REPEAT
       }
     }
