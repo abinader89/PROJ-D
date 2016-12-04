@@ -173,10 +173,11 @@ public class StockMarket {
       System.out.println("Welcome to StockMarketGame. User or Admin?");
       switch (sc.next().toLowerCase())  {
         case "user":
-          this.userStart();
+//          this.userStart();
           keepGoing = false;
           break;
         case "admin":
+          this.adminStart();
           keepGoing = false;
           break;
         case "exit":
@@ -187,29 +188,51 @@ public class StockMarket {
     }
   }
   
-  public void userStart()  {
+//  public void userStart()  {
+//    boolean keepGoing = true;
+//    while (keepGoing)  {
+//      keepGoing = false;
+//      System.out.println("Trader?");
+//      String traderSelected = sc.next().toLowerCase();
+//      this.isExit(traderSelected);
+//      switch (traderSelected)  {
+//        case "new":
+//          this.createLeague();
+//          break;
+//        case "existing":
+//          this.existingLeague();
+//          break;
+//        default:
+//          System.out.println("Trader not in database!");
+//          keepGoing = true;
+//      }
+//    }
+//  }
+  
+  public void adminStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
       keepGoing = false;
-      System.out.println("Create a new league or use existing?");
-      String response = sc.next().toLowerCase();
-      this.isExit(response);
-      switch (response)  {
+      System.out.println("Command?");
+      String traderSelected = sc.next().toLowerCase();
+      this.isExit(traderSelected);
+      switch (traderSelected)  {
         case "new":
-          this.createLeague();
+          this.createTeam();
           break;
         case "existing":
-          this.existingLeague();
+//          this.existingLeague();
           break;
         default:
           keepGoing = true;
+          System.out.println("\n Invalid input" + "\nPlease choose one of:" + "\nupdate, new, " +
+                  "delete.");
       }
-      System.out.println("Please choose either existing or new league");
     }
   }
   
-  public void createLeague() {
-    System.out.println("League name?");
+  public void createTeam() {
+    System.out.println("Firm name?");
     String name = sc.next();
     List<String> players = new ArrayList<String>();
     System.out.println("First trader name?");
@@ -225,8 +248,8 @@ public class StockMarket {
     }
     // ADD A LEAGUE TO THE DATABASE
     try {
-      StringBuilder insertLeague = new StringBuilder("INSERT INTO League VALUES("
-             + "'" + name + "'" + ", " + "'" + players.get(0) + "'" + ")");
+      StringBuilder insertLeague = new StringBuilder("INSERT INTO Team VALUES("
+              + "'" + name + "'" + ", " + "'" + players.get(0) + "'" + ")");
       for (int ii = 1; ii < players.size(); ii++) {
         insertLeague.append(", (" + "'" + name + "'" +  ", " + "'" + players.get(ii) + "'" + ")");
         if (ii == players.size() - 1) {
@@ -242,7 +265,7 @@ public class StockMarket {
       System.out.println("Enter 'return' to select a league or enter any other key to exit.");
       String response = sc.next();
       if (response.equalsIgnoreCase("return")) {
-        this.userStart();
+//        this.userStart();
         return;
       } else {
         System.out.println("Thanks for playing!");
@@ -250,27 +273,27 @@ public class StockMarket {
       }
     }
   
-  public void existingLeague() {
-    String traderName;
-    System.out.println("What is your trader name?");
-    traderName = sc.next();
-    isExit(traderName);
-    System.out.println("Get stats or make a trade?");
-    String action = sc.next();
-    boolean keepGoing = true;
-    while (keepGoing) {
-      switch (action) {
-        case "stats":
-//          this.checkStats(traderName);
-        case "trade":
-//          this.trade(traderName);
-        case "logout":
-          keepGoing = false;
-          this.userStart();
-        default: // REPEAT
-      }
-    }
-  }
+//  public void existingLeague() {
+//    String traderName;
+//    System.out.println("What is your trader name?");
+//    traderName = sc.next();
+//    isExit(traderName);
+//    System.out.println("Get stats or make a trade?");
+//    String action = sc.next();
+//    boolean keepGoing = true;
+//    while (keepGoing) {
+//      switch (action) {
+//        case "stats":
+////          this.checkStats(traderName);
+//        case "trade":
+////          this.trade(traderName);
+//        case "logout":
+//          keepGoing = false;
+//          this.userStart();
+//        default: // REPEAT
+//      }
+//    }
+//  }
   
   static void isExit(String message)  {
     if (message.equalsIgnoreCase("exit"))  {

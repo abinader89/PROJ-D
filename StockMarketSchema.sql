@@ -7,11 +7,9 @@ trader names as well as the traders returns and its available funds
 */
 DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
-
-Trader_name Varchar(64) PRIMARY KEY,
-stock_returns double NOT NULL,
-available_funds double NOT NULL
-
+Trader_Name VARCHAR(64) PRIMARY KEY,
+Stock_Returns DOUBLE,
+Available_Funds DOUBLE
 );
 
 /*
@@ -22,22 +20,20 @@ for a company can be bought
 */
 DROP TABLE IF EXISTS Company;
 CREATE TABLE Company (
-Company_ID Varchar(10) Primary Key,
+Company_ID Varchar(10) PRIMARY KEY,
 Company_name Varchar(64),
 CEO Varchar(64),
 OutStanding_Shares INT 
 );
 
 /*
-intermediary table that maps
-out traders with their respective leagues
+table that shows the rosters of the teams
 */
-DROP TABLE IF EXISTS League;
-CREATE TABLE League (
-
-Team_name INT PRIMARY KEY,
+DROP TABLE IF EXISTS Team;
+CREATE TABLE Team (
+Team_name VARCHAR(64) PRIMARY KEY,
 Trader_name VARCHAR(64),
-CONSTRAINT trader_name_fk FOREIGN KEY(Trader_name) references Traders(Trader_name) ON DELETE CASCADE ON UPDATE CASCADE
+FOREIGN KEY(Trader_name) references Traders(Trader_Name)
 );
 
 
@@ -47,11 +43,10 @@ for when a person buys/sells a stock
 */
 DROP TABLE IF EXISTS Transactions;
 CREATE TABLE Transactions(
-
 StockID INT PRIMARY KEY auto_increment,
 Date_of DATE,
 Company VARCHAR(64),
-Trader VARCHAR(64),
+Trader VARCHAR(64) FOREIGN KEY,
 Quantity INT,
 Buy BOOL,
 CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -63,8 +58,8 @@ CREATE TABLE Stock_Prices(
 Company VARCHAR(10),
 Date_of DATE,
 Price DOUBLE,
-PRIMARY KEY(Company,Date_of),
-CONSTRAINT company_fk2 FOREIGN KEY(Company) references Company(Company_ID) ON DELETE CASCADE ON UPDATE CASCADE
+PRIMARY KEY(Company, Date_of),
+FOREIGN KEY(Company) references Company(Company_ID)
 );
 
 
@@ -76,11 +71,11 @@ how many of what stock does each player own
 
 DROP TABLE IF EXISTS Portfolio;
 CREATE TABLE Portfolio(
-Company VARCHAR(64),
+Company VARCHAR(10),
 Trader_name VARCHAR(64),
 PRIMARY KEY(Company, Trader_name),
-CONSTRAINT company_fk3 FOREIGN KEY(Company) references Company(Company_ID) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT trader_name_fk2 FOREIGN KEY(Trader_name) references Traders(Trader_name) ON DELETE CASCADE ON UPDATE CASCADE
+FOREIGN KEY(Company) references Company(Company_ID),
+FOREIGN KEY(Trader_name) references Traders(Trader_name)
 );
 
 INSERT INTO Company VALUES
@@ -157,6 +152,8 @@ UPDATE Stock_Prices
 	WHERE company_ID = stock_ID;
 END
 //
+
+DELIMITER ;
 
 
 
