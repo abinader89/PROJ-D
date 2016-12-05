@@ -179,6 +179,10 @@ public class StockMarket {
     }
   }
   
+  /**
+   * This method will be called when selecting the user option or after finishing adding a firm
+   * to the database.
+   */
   public void userStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
