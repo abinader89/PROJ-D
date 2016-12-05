@@ -276,7 +276,7 @@ public class StockMarket {
           this.userStart();
         case "help":
           System.out.println("Available commands are:\n[n] - Creates a new firm, enter done when" +
-                  " finished specifying new traders to add to this firm.\nprompts.\n[u] - Updates" +
+                  " finished specifying new traders to add to this firm.\n[u] - Updates" +
                   "the database with the most recent StockMarket values.\n[r] - Resets all the " +
                   "information the program has for the traders\n[p] - Play the stock market " +
                   "game.\n[d] - Deletes a trader from the database\n[help] - Displays this " +

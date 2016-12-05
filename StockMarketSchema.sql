@@ -36,7 +36,7 @@ CREATE TABLE Transactions(
 StockID INT PRIMARY KEY auto_increment,
 Date_of DATE,
 Company VARCHAR(64),
-Trader VARCHAR(64) FOREIGN KEY,
+Trader VARCHAR(64),
 Quantity INT,
 Buy BOOL,
 CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE ON UPDATE CASCADE,
