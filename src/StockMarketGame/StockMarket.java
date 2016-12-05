@@ -235,7 +235,7 @@ public class StockMarket {
         case "help":
           System.out.println("Available commands are:\n[b] - Buy stocks available.\n[s] - Sell" +
                   " stocks.\n[stats] - Check the standings of the traders in the database.\n" +
-                  "[help] - Displays this information.");
+                  "[i] - Check current inventory of stocks.\n[help] - Displays this information.");
           break;
         default:
           System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
@@ -262,12 +262,25 @@ public class StockMarket {
           this.priceUpdate();
           keepGoing = true;
           break;
+        case "d":
+          try {
+            if (this.deleteTrader()) {
+              System.out.println("Trader " + this.characterName + " deleted.");
+            }
+          } catch (SQLException e) {
+            System.out.println("Trader not found!");
+          }
+          keepGoing = true;
+          break;
+        case "p":
+          this.userStart();
         case "help":
           System.out.println("Available commands are:\n[n] - Creates a new firm, enter done when" +
                   " finished specifying new traders to add to this firm.\nprompts.\n[u] - Updates" +
-                  "the database with the most recent StockMarket " +
-                  "values.\n[r] - Resets all the information the program has for the traders" +
-                  "\n[help] - Displays this information.");
+                  "the database with the most recent StockMarket values.\n[r] - Resets all the " +
+                  "information the program has for the traders\n[p] - Play the stock market " +
+                  "game.\n[d] - Deletes a trader from the database\n[help] - Displays this " +
+                  "information.");
           keepGoing = true;
           break;
         default:
@@ -276,6 +289,18 @@ public class StockMarket {
                   "available commands.\n");
       }
     }
+  }
+  
+  /**
+   * Deletes a trader from the database.
+   * @return
+   * @throws SQLException
+   */
+  private boolean deleteTrader() throws SQLException {
+    System.out.println("Delete which trader?");
+    this.characterName = sc.next();
+    String delete = "DELETE FROM TRADERS WHERE trader_name = " + "'" + this.characterName + "';";
+    return this.executeUpdate(this.conn, delete);
   }
   
   /**
@@ -329,9 +354,9 @@ public class StockMarket {
     }
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
-              + "'" + players.get(0) + "', 0 , 5000," + "'" + traderName + "')");
+              + "'" + players.get(0) + "', 0 , 5000," + "'" + firmName + "')");
       for (int ii = 1; ii < players.size(); ii++) {
-        insertTraders.append(", (" + "'" + players.get(ii) + "', 0 , 5000," + "'" + traderName +
+        insertTraders.append(", (" + "'" + players.get(ii) + "', 0 , 5000," + "'" + firmName +
                 "')");
         if (ii == players.size() - 1) {
           insertTraders.append(";");
@@ -345,7 +370,7 @@ public class StockMarket {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    this.userStart();
+    this.adminStart();
   }
   
   /**
