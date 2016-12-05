@@ -8,7 +8,6 @@ trader names as well as the traders returns and its available funds
 DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
 Trader_Name VARCHAR(64) PRIMARY KEY,
-Stock_Returns DOUBLE,
 Available_Funds DOUBLE,
 Team VARCHAR(64)
 );
@@ -63,6 +62,7 @@ DROP TABLE IF EXISTS Portfolio;
 CREATE TABLE Portfolio(
 Company VARCHAR(10),
 Trader_name VARCHAR(64),
+Amount INT(11),
 PRIMARY KEY(Company, Trader_name),
 FOREIGN KEY(Company) references Company(Company_ID),
 FOREIGN KEY(Trader_name) references Traders(Trader_name)

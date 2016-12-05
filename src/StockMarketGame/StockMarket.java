@@ -253,7 +253,7 @@ public class StockMarket {
       this.isExit(traderSelected);
       switch (traderSelected)  {
         case "n":
-          this.createFirm();
+          this.createLeague();
           break;
         case "r":
           this.resetTraders();
@@ -275,9 +275,9 @@ public class StockMarket {
         case "p":
           this.userStart();
         case "help":
-          System.out.println("Available commands are:\n[n] - Creates a new firm, enter done when" +
-                  " finished specifying new traders to add to this firm.\n[u] - Updates" +
-                  "the database with the most recent StockMarket values.\n[r] - Resets all the " +
+          System.out.println("Available commands are:\n[n] - Creates a new league, enter done " +
+                  "when finished specifying new traders to add to this firm.\n[u] - Updates" +
+                  " the database with the most recent StockMarket values.\n[r] - Resets all the " +
                   "information the program has for the traders\n[p] - Play the stock market " +
                   "game.\n[d] - Deletes a trader from the database\n[help] - Displays this " +
                   "information.");
@@ -293,7 +293,7 @@ public class StockMarket {
   
   /**
    * Deletes a trader from the database.
-   * @return
+   * @return boolean
    * @throws SQLException
    */
   private boolean deleteTrader() throws SQLException {
@@ -318,20 +318,20 @@ public class StockMarket {
   }
   
   /**
-   * This method will create a firm.
+   * This method will create a league.
    */
-  public void createFirm() {
+  public void createLeague() {
     boolean keepGoing = true;
-    System.out.println("Firm name?");
+    System.out.println("League name?");
     String firmName = sc.next();
     while (keepGoing) {
-      System.out.println("Confirm firm name " + firmName + "?\n[y|n]");
+      System.out.println("Confirm league name " + firmName + "?\n[y|n]");
       switch (sc.next().toLowerCase()) {
         case "y":
           keepGoing = false;
           break;
         case "n":
-          System.out.println("Input new firm name:\n");
+          System.out.println("Input new league name:\n");
           firmName = sc.next();
           break;
         case "exit":
@@ -354,12 +354,16 @@ public class StockMarket {
     }
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
-              + "'" + players.get(0) + "', 0 , 5000," + "'" + firmName + "')");
-      for (int ii = 1; ii < players.size(); ii++) {
-        insertTraders.append(", (" + "'" + players.get(ii) + "', 0 , 5000," + "'" + firmName +
-                "')");
-        if (ii == players.size() - 1) {
-          insertTraders.append(";");
+              + "'" + players.get(0) + "', 5000," + "'" + firmName + "')");
+      if (players.size() == 1) {
+        insertTraders.append(";");
+      } else {
+        for (int ii = 1; ii < players.size(); ii++) {
+          insertTraders.append(", (" + "'" + players.get(ii) + "', 5000," + "'" + firmName +
+                  "')");
+          if (ii == players.size() - 1) {
+            insertTraders.append(";");
+          }
         }
       }
       System.out.println("Firm " + firmName + " created, with traders:\n");

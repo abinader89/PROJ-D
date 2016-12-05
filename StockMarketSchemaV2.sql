@@ -156,7 +156,7 @@ CREATE PROCEDURE update_stock
 BEGIN
 UPDATE Stock_Prices
 	SET Date_of = now(), Price = new_price
-	WHERE company_ID = stock_ID;
+	WHERE company = stock_ID;
 END
 //
 
