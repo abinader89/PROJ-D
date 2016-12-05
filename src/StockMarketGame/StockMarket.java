@@ -218,30 +218,53 @@ public class StockMarket {
     String nextCommand = sc.next();
     this.isExit(nextCommand.toLowerCase());
       switch (nextCommand) {
-        case "b":
+        case "bu":
           // BUY SHIT
           // CALL PROCEDURE TO BUY STOCK SPECIFIED AMOUNT OF STOCKS
           break;
-        case "s":
+        case "se":
           // SELL SHIT
           // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
-        case "i":
-          // CHECK THIS TRADERS INVENTORY
-        case "stats":
+        case "in":
+          this.checkInventory();
+        case "st":
           // CHECK THE STANDINGS
           // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
+        case "pr":
+          // CHECK CURRENT PRICES OF ALL THE STOCKS
+          this.displayCurrentStockInformation();
+        case "lo":
+          this.characterName = null;
+          this.run();
+          break;
         case "help":
-          System.out.println("Available commands are:\n[b] - Buy stocks available.\n[s] - Sell" +
-                  " stocks.\n[stats] - Check the standings of the traders in the database.\n" +
-                  "[i] - Check current inventory of stocks.\n[help] - Displays this information.");
+          System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
+                  " stocks.\n[st] - Check the standings of the traders in the database.\n" +
+                  "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
+                  "of stocks available.\n[lo] - Logs you out of program.\n[help] - Displays this " +
+                  "information.");
           break;
         default:
           System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
                   "available commands.\n");
       }
     }
+  }
+  
+  /**
+   * This displays information about current stock prices.
+   */
+  private void displayCurrentStockInformation() {
+    // TODO
+  }
+  
+  /**
+   * Checks the inventory of this trader.
+   */
+  private void checkInventory() {
+    // TODO
   }
   
   public void adminStart()  {
@@ -252,17 +275,17 @@ public class StockMarket {
       String traderSelected = sc.next().toLowerCase();
       this.isExit(traderSelected);
       switch (traderSelected)  {
-        case "n":
+        case "ne":
           this.createLeague();
           break;
-        case "r":
+        case "re":
           this.resetTraders();
           break;
-        case "u":
+        case "up":
           this.priceUpdate();
           keepGoing = true;
           break;
-        case "d":
+        case "de":
           try {
             if (this.deleteTrader()) {
               System.out.println("Trader " + this.characterName + " deleted.");
@@ -272,14 +295,15 @@ public class StockMarket {
           }
           keepGoing = true;
           break;
-        case "p":
+        case "pl":
           this.userStart();
+          break;
         case "help":
-          System.out.println("Available commands are:\n[n] - Creates a new league, enter done " +
-                  "when finished specifying new traders to add to this firm.\n[u] - Updates" +
-                  " the database with the most recent StockMarket values.\n[r] - Resets all the " +
-                  "information the program has for the traders\n[p] - Play the stock market " +
-                  "game.\n[d] - Deletes a trader from the database\n[help] - Displays this " +
+          System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
+                  "when finished specifying new traders to add to this firm.\n[up] - Updates" +
+                  " the database with the most recent StockMarket values.\n[re] - Resets all the " +
+                  "information the program has for the traders\n[pl] - Play the stock market " +
+                  "game.\n[de] - Deletes a trader from the database\n[help] - Displays this " +
                   "information.");
           keepGoing = true;
           break;
