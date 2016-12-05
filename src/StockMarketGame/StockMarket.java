@@ -226,14 +226,16 @@ public class StockMarket {
           // SELL SHIT
           // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
+        case "i":
+          // CHECK THIS TRADERS INVENTORY
         case "stats":
           // CHECK THE STANDINGS
           // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "help":
-          System.out.println("Available commands are:\n[b] - Buy stocks if enough funds are " +
-                  "available.\n[s] - Sell stocks.\n[stats] - Check the standings of the traders " +
-                  "in the database.\n[help] - Displays this information.");
+          System.out.println("Available commands are:\n[b] - Buy stocks available.\n[s] - Sell" +
+                  " stocks.\n[stats] - Check the standings of the traders in the database.\n" +
+                  "[help] - Displays this information.");
           break;
         default:
           System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
@@ -321,8 +323,10 @@ public class StockMarket {
     keepGoing = true;
     System.out.println("Next trader name or [done]?");
     traderName = sc.next();
-    this.addTraders(keepGoing, false, traderName, players);
-    // ADD TRADERS INTO THE DATABASE
+    if (!(traderName.equals("done"))) {
+      this.addTraders(keepGoing, false, traderName, players);
+      // ADD TRADERS INTO THE DATABASE
+    }
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
               + "'" + players.get(0) + "', 0 , 5000," + "'" + traderName + "')");
