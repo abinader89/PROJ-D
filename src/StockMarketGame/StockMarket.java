@@ -220,12 +220,15 @@ public class StockMarket {
       switch (nextCommand) {
         case "b":
           // BUY SHIT
+          // CALL PROCEDURE TO BUY STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "s":
           // SELL SHIT
+          // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "stats":
           // CHECK THE STANDINGS
+          // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "help":
           System.out.println("Available commands are:\n[b] - Buy stocks if enough funds are " +
