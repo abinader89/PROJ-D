@@ -43,10 +43,8 @@ import static StockMarketGame.StockAPIConnection.cleanURLJson;
  * java.net.ConnectException: Connection refused
  */
 public class StockMarket {
-  
   Readable r = new InputStreamReader(System.in);
   Scanner sc = new Scanner(r);
-  
   // The name of the MySQL account to use (or empty for anonymous)
   private String userName;
   
@@ -185,26 +183,61 @@ public class StockMarket {
    */
   public void userStart()  {
     boolean keepGoing = true;
+    System.out.println("Please Specify Trader:\n");
     while (keepGoing)  {
-      System.out.println("Please Specify Trader:\n");
       String traderSelected = sc.next();
       this.isExit(traderSelected);
       try {
         ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders WHERE Trader_Name = "
                 + "'" + traderSelected + "';");
-        System.out.println(traderSelected + " selected");
         if (!rs1.next()) {
-          System.out.println("Investor not found!\n");
+          System.out.println("Investor not found!\nPlease Specify Trader:\n");
         } else {
           this.characterName = traderSelected;
+          System.out.println(traderSelected + " selected");
+  
         }
       } catch (SQLException e) {
         System.out.println("ERROR: Could not execute the command");
         e.printStackTrace();
       }
-          keepGoing = false;
+      if (this.characterName != null) {
+        this.traderCommands();
+      }
+          keepGoing = true;
       }
     }
+  
+  /**
+   * A trader is selected. Now operate commands.
+   */
+  private void traderCommands() {
+    boolean keepGoing = true;
+    while (keepGoing) {
+      System.out.println("What would you like to do?");
+    String nextCommand = sc.next();
+    this.isExit(nextCommand.toLowerCase());
+      switch (nextCommand) {
+        case "b":
+          // BUY SHIT
+          break;
+        case "s":
+          // SELL SHIT
+          break;
+        case "stats":
+          // CHECK THE STANDINGS
+          break;
+        case "help":
+          System.out.println("Available commands are:\n[b] - Buy stocks if enough funds are " +
+                  "available.\n[s] - Sell stocks.\n[stats] - Check the standings of the traders " +
+                  "in the database.\n[help] - Displays this information.");
+          break;
+        default:
+          System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
+                  "available commands.\n");
+      }
+    }
+  }
   
   public void adminStart()  {
     boolean keepGoing = true;
