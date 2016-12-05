@@ -388,28 +388,6 @@ public class StockMarket {
     }
   }
   
-//  public void existingLeague() {
-//    String traderName;
-//    System.out.println("What is your trader name?");
-//    traderName = sc.next();
-//    isExit(traderName);
-//    System.out.println("Get stats or make a trade?");
-//    String action = sc.next();
-//    boolean keepGoing = true;
-//    while (keepGoing) {
-//      switch (action) {
-//        case "stats":
-////          this.checkStats(traderName);
-//        case "trade":
-////          this.trade(traderName);
-//        case "logout":
-//          keepGoing = false;
-//          this.userStart();
-//        default: // REPEAT
-//      }
-//    }
-//  }
-  
   /**
    * Disconnects from the server.
    * @param message String
