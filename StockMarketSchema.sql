@@ -9,7 +9,8 @@ DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
 Trader_Name VARCHAR(64) PRIMARY KEY,
 Stock_Returns DOUBLE,
-Available_Funds DOUBLE
+Available_Funds DOUBLE,
+Team VARCHAR(64)
 );
 
 /*
@@ -25,17 +26,6 @@ Company_name Varchar(64),
 CEO Varchar(64),
 OutStanding_Shares INT 
 );
-
-/*
-table that shows the rosters of the teams
-*/
-DROP TABLE IF EXISTS Team;
-CREATE TABLE Team (
-Team_name VARCHAR(64) PRIMARY KEY,
-Trader_name VARCHAR(64),
-FOREIGN KEY(Trader_name) references Traders(Trader_Name)
-);
-
 
 /*
 list of transactions 

@@ -69,6 +69,9 @@ public class StockMarket {
   private String stockURL = "https://www.google.com/finance/info?q=NSE:BABA,CVS,BMY,MRK,XOM,TGT," +
           "DOW,TWX,TSN,CBS,APA,MSFT,V,WMT,PG,CRM,COI,NVS,PRU,AAPL,GOOG,AMZN,C";
   
+  /**
+   * Constructor for a StockMarket.
+   */
   public StockMarket()  {
     boolean keepGoing = true;
     while (keepGoing) {
@@ -85,22 +88,6 @@ public class StockMarket {
     }
   }
   
-  /**
-   * Enum representing the permissions granted to the current user.
-   */
-  private enum Permissions {
-    USER("user"), ADMIN("admin");
-    
-    private String stringRep;
-    
-    Permissions(String str) {
-      this.stringRep = str;
-    }
-    
-    public String toString() {
-      return this.stringRep;
-    }
-  }
   /**
    * Get a new database connection
    *
@@ -149,6 +136,9 @@ public class StockMarket {
     return stmt.executeQuery(command);
   }
   
+  /**
+   * This method will update the database.
+   */
   void priceUpdate()  {
     try {
       String stockInfo = cleanURLJson(StockAPIConnection.getText(stockURL));
@@ -188,90 +178,199 @@ public class StockMarket {
     }
   }
   
-//  public void userStart()  {
-//    boolean keepGoing = true;
-//    while (keepGoing)  {
-//      keepGoing = false;
-//      System.out.println("Trader?");
-//      String traderSelected = sc.next().toLowerCase();
-//      this.isExit(traderSelected);
-//      switch (traderSelected)  {
-//        case "new":
-//          this.createLeague();
-//          break;
-//        case "existing":
-//          this.existingLeague();
-//          break;
-//        default:
-//          System.out.println("Trader not in database!");
-//          keepGoing = true;
-//      }
-//    }
-//  }
+  public void userStart()  {
+    boolean keepGoing = true;
+    while (keepGoing)  {
+      keepGoing = false;
+      System.out.println("Please Specify Trader:\n");
+      String traderSelected = sc.next().toLowerCase();
+      this.isExit(traderSelected);
+      try {
+        ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders WHERE Trader_Name = "
+                + "'" + traderSelected + "';");
+        if (rs1.getFetchSize() == 0) {
+          System.out.println("Investor not found!\n");
+        } else {
+          this.characterName = rs1.getString("Trader_Name");
+          System.out.println(this.characterName);
+        }
+      } catch (SQLException e) {
+        System.out.println("ERROR: Could not execute the command");
+        e.printStackTrace();
+      }
+          keepGoing = true;
+      }
+    }
   
   public void adminStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
       keepGoing = false;
-      System.out.println("Command?");
+      System.out.println("Input command to execute.");
       String traderSelected = sc.next().toLowerCase();
       this.isExit(traderSelected);
       switch (traderSelected)  {
-        case "new":
-          this.createTeam();
+        case "n":
+          this.createFirm();
           break;
-        case "existing":
-//          this.existingLeague();
+        case "e":
+//          this.existingFirm();
+          break;
+        case "r":
+          this.resetTraders();
+          break;
+        case "u":
+          this.priceUpdate();
+          keepGoing = true;
+          break;
+        case "help":
+          System.out.println("Available commands are:\n[n] - Creates a new firm, enter done when" +
+                  " finished specifying new traders to add to this firm.\n[e] - Choose an " +
+                  "existing firm, specify the Firm name and trader name on the consequent " +
+                  "prompts.\n[u] - Updates the database with the most recent StockMarket " +
+                  "values.\n[r] - Resets all the information the program has for the " +
+                  "traders.\n[help] - Displays this information.");
+          keepGoing = true;
           break;
         default:
           keepGoing = true;
-          System.out.println("\n Invalid input" + "\nPlease choose one of:" + "\nupdate, new, " +
-                  "delete.");
+          System.out.print("Invalid input!\nPlease use the [help] command for a list of " +
+                  "available commands.\n");
       }
     }
   }
   
-  public void createTeam() {
-    System.out.println("Firm name?");
-    String name = sc.next();
-    List<String> players = new ArrayList<String>();
-    System.out.println("First trader name?");
-    players.add(sc.next());
-    boolean keepGoing = true;
-    while (true) {
-      System.out.println("Next trader name?");
-      String newName = sc.next();
-      if (newName.toLowerCase().equals("done")) {
-        break;
-      }
-      players.add(newName);
-    }
-    // ADD A LEAGUE TO THE DATABASE
+  /**
+   * This method will reset the traders table.
+   */
+  private void resetTraders() {
     try {
-      StringBuilder insertLeague = new StringBuilder("INSERT INTO Team VALUES("
-              + "'" + name + "'" + ", " + "'" + players.get(0) + "'" + ")");
-      for (int ii = 1; ii < players.size(); ii++) {
-        insertLeague.append(", (" + "'" + name + "'" +  ", " + "'" + players.get(ii) + "'" + ")");
-        if (ii == players.size() - 1) {
-          insertLeague.append(";");
-        }
-      }
-      System.out.println(insertLeague.toString());
-      this.executeUpdate(this.conn, insertLeague.toString());
+      String resetTradersTable = "DELETE FROM Traders;";
+      this.executeUpdate(this.conn, resetTradersTable);
     } catch (SQLException e) {
       e.printStackTrace();
     }
-      System.out.println("Traders added");
-      System.out.println("Enter 'return' to select a league or enter any other key to exit.");
-      String response = sc.next();
-      if (response.equalsIgnoreCase("return")) {
-//        this.userStart();
-        return;
-      } else {
-        System.out.println("Thanks for playing!");
-        return;
+    System.out.println("Traders data reset!");
+    this.adminStart();
+  }
+  
+  /**
+   * This method will create a firm.
+   */
+  public void createFirm() {
+    boolean keepGoing = true;
+    System.out.println("Firm name?");
+    String firmName = sc.next();
+    while (keepGoing) {
+      System.out.println("Confirm firm name " + firmName + "?\n[y|n]");
+      switch (sc.next().toLowerCase()) {
+        case "y":
+          keepGoing = false;
+          break;
+        case "n":
+          System.out.println("Input new firm name:\n");
+          firmName = sc.next();
+          break;
+        case "exit":
+          this.isExit("exit");
+        default:
+          System.out.println("Invalid input!");
       }
     }
+    List<String> players = new ArrayList<String>();
+    keepGoing = true;
+    System.out.println("First trader name?");
+    String traderName = sc.next();
+    this.addTraders(keepGoing, true, traderName, players);
+    keepGoing = true;
+    System.out.println("Next trader name or [done]?");
+    traderName = sc.next();
+    this.addTraders(keepGoing, false, traderName, players);
+    // ADD TRADERS INTO THE DATABASE
+    try {
+      StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
+              + "'" + players.get(0) + "', 0 , 5000," + "'" + traderName + "')");
+      for (int ii = 1; ii < players.size(); ii++) {
+        insertTraders.append(", (" + "'" + players.get(ii) + "', 0 , 5000," + "'" + traderName +
+                "')");
+        if (ii == players.size() - 1) {
+          insertTraders.append(";");
+        }
+      }
+      System.out.println("Firm " + firmName + " created, with traders:\n");
+      for (String p : players) {
+        System.out.println(p);
+      }
+      this.executeUpdate(this.conn, insertTraders.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    System.out.println("Enter 'play' to select a Trader.");
+    String response = sc.next();
+    switch (response) {
+      case "play":
+        this.userStart();
+        break;
+      case "exit":
+        this.isExit(response);
+        break;
+      case "help":
+        System.out.println("Available commands are:\n[start] - Allows you to specify a trader " +
+                "and play the game.\n[help] - Displays this information\n [exit] - Disconnects " +
+                "from the server.");
+        break;
+      default:
+        System.out.print("Invalid input!\nPlease use the [help] command for a list of " +
+                "available commands");
+    }
+  }
+  
+  /**
+   * Adds traders to the param list.
+   * @param keepGoing boolean
+   * @param firstTrader boolean
+   * @param traderName String
+   * @param players List[String]
+   */
+  private void addTraders(boolean keepGoing, boolean firstTrader, String traderName, List<String>
+          players) {
+    String nextCommand;
+    while (keepGoing) {
+      if (Objects.nonNull(traderName)) {
+        System.out.println("Confirm adding " + traderName + "?\n[y|n]");
+      }
+      nextCommand = sc.next();
+      switch (nextCommand.toLowerCase()) {
+        case "y":
+          if (firstTrader) {
+            keepGoing = false;
+          }
+          players.add(traderName);
+          traderName = null;
+          if (!(firstTrader)) {
+            System.out.println("Next trader name or [done]?");
+        }
+          break;
+        case "n":
+          System.out.println("Input new trader name:");
+          traderName = sc.next();
+          if (traderName.toLowerCase().equals("done")) {
+            keepGoing = false;
+          }
+          break;
+        case "done":
+          if (!(firstTrader)) {
+            keepGoing = false;
+            break;
+          }
+        case "exit":
+          this.isExit("exit");
+          break;
+        default:
+          System.out.println("Invalid input!");
+      }
+    }
+  }
   
 //  public void existingLeague() {
 //    String traderName;
@@ -295,6 +394,10 @@ public class StockMarket {
 //    }
 //  }
   
+  /**
+   * Disconnects from the server.
+   * @param message String
+   */
   static void isExit(String message)  {
     if (message.equalsIgnoreCase("exit"))  {
       System.out.println("Goodbye");
