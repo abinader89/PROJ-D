@@ -1,4 +1,6 @@
 package StockMarketGame;
+import com.mchange.v2.sql.SqlUtils;
+
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -163,7 +165,7 @@ public class StockMarket {
       System.out.println("Welcome to StockMarketGame. User or Admin?");
       switch (sc.next().toLowerCase())  {
         case "user":
-//          this.userStart();
+          this.userStart();
           keepGoing = false;
           break;
         case "admin":
@@ -181,24 +183,23 @@ public class StockMarket {
   public void userStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
-      keepGoing = false;
       System.out.println("Please Specify Trader:\n");
-      String traderSelected = sc.next().toLowerCase();
+      String traderSelected = sc.next();
       this.isExit(traderSelected);
       try {
         ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders WHERE Trader_Name = "
                 + "'" + traderSelected + "';");
-        if (rs1.getFetchSize() == 0) {
+        System.out.println(traderSelected + " selected");
+        if (!rs1.next()) {
           System.out.println("Investor not found!\n");
         } else {
-          this.characterName = rs1.getString("Trader_Name");
-          System.out.println(this.characterName);
+          this.characterName = traderSelected;
         }
       } catch (SQLException e) {
         System.out.println("ERROR: Could not execute the command");
         e.printStackTrace();
       }
-          keepGoing = true;
+          keepGoing = false;
       }
     }
   
@@ -213,9 +214,6 @@ public class StockMarket {
         case "n":
           this.createFirm();
           break;
-        case "e":
-//          this.existingFirm();
-          break;
         case "r":
           this.resetTraders();
           break;
@@ -225,11 +223,10 @@ public class StockMarket {
           break;
         case "help":
           System.out.println("Available commands are:\n[n] - Creates a new firm, enter done when" +
-                  " finished specifying new traders to add to this firm.\n[e] - Choose an " +
-                  "existing firm, specify the Firm name and trader name on the consequent " +
-                  "prompts.\n[u] - Updates the database with the most recent StockMarket " +
-                  "values.\n[r] - Resets all the information the program has for the " +
-                  "traders.\n[help] - Displays this information.");
+                  " finished specifying new traders to add to this firm.\nprompts.\n[u] - Updates" +
+                  "the database with the most recent StockMarket " +
+                  "values.\n[r] - Resets all the information the program has for the traders" +
+                  "\n[help] - Displays this information.");
           keepGoing = true;
           break;
         default:
@@ -305,24 +302,7 @@ public class StockMarket {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    System.out.println("Enter 'play' to select a Trader.");
-    String response = sc.next();
-    switch (response) {
-      case "play":
-        this.userStart();
-        break;
-      case "exit":
-        this.isExit(response);
-        break;
-      case "help":
-        System.out.println("Available commands are:\n[start] - Allows you to specify a trader " +
-                "and play the game.\n[help] - Displays this information\n [exit] - Disconnects " +
-                "from the server.");
-        break;
-      default:
-        System.out.print("Invalid input!\nPlease use the [help] command for a list of " +
-                "available commands");
-    }
+    this.userStart();
   }
   
   /**
@@ -336,7 +316,7 @@ public class StockMarket {
           players) {
     String nextCommand;
     while (keepGoing) {
-      if (Objects.nonNull(traderName)) {
+      if (traderName != null) {
         System.out.println("Confirm adding " + traderName + "?\n[y|n]");
       }
       nextCommand = sc.next();
