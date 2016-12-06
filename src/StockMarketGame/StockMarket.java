@@ -222,7 +222,6 @@ public class StockMarket {
       switch (nextCommand) {
         case "bu":
           this.buyStock();
-          // CALL PROCEDURE TO BUY STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "se":
           this.sellStock();
@@ -280,11 +279,29 @@ public class StockMarket {
     try {
       ResultSet rs0 = this.executeQuery(this.conn, currentFundsQuery);
       if (rs0.next()) {
-        double funds = (Double)rs0.getObject("available_funds");
-        System.out.println(funds);
+        double funds = (Double) rs0.getObject("available_funds");
+        System.out.println("Input company ID & Quantity\nCompany?");
+        String company = sc.next();
+        System.out.println("Quantity?");
+        int qty = sc.nextInt();
+        String priceQuery = "SELECT PRICE FROM stock_prices where company = '" + company + "';";
+        ResultSet rs1 = this.executeQuery(this.conn, priceQuery);
+        if (!rs1.next()) {
+          System.out.println("No company found!");
+        } else {
+            double price = (Double) rs1.getObject("price");
+          System.out.println("Funds available: $" + funds + " ...total price $" + price * qty);
+            if (funds >= (price * qty)) {
+              for (int i = 0; i < qty; i++) {
+//                executeUpdate(this.conn, BUY THE STOCK)
+                System.out.println(i + 1 + " stock(s) purchased from " + company.toUpperCase());
+              }
+            }
+          System.out.println("Operation successful.");
+        }
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      System.out.println("Something went wrong!");
     }
   }
   
