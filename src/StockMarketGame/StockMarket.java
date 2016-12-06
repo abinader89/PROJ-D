@@ -268,6 +268,13 @@ public class StockMarket {
    * Sells stock if the trader has enough of it in inventory.
    */
   private void sellStock() {
+    // TODO
+  }
+  
+  /**
+   * Buys stock if the trader has enough capital.
+   */
+  private void buyStock() {
     String currentFundsQuery = "SELECT available_funds FROM traders WHERE trader_name = '"
             + this.characterName + "';";
     try {
@@ -279,13 +286,6 @@ public class StockMarket {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-  }
-  
-  /**
-   * Buys stock if the trader has enough capital.
-   */
-  private void buyStock() {
-    // TODO
   }
   
   /**
