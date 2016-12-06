@@ -220,10 +220,12 @@ public class StockMarket {
       switch (nextCommand) {
         case "bu":
           // BUY SHIT
+          this.buyStock();
           // CALL PROCEDURE TO BUY STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "se":
           // SELL SHIT
+          this.sellStock();
           // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "in":
@@ -253,6 +255,20 @@ public class StockMarket {
   }
   
   /**
+   * Sells stock if the trader has enough of it in inventory.
+   */
+  private void sellStock() {
+    // TODO
+  }
+  
+  /**
+   * Buys stock if the trader has enough capital.
+   */
+  private void buyStock() {
+    // TODO
+  }
+  
+  /**
    * This displays information about current stock prices.
    */
   private void displayCurrentStockInformation() {
@@ -266,6 +282,9 @@ public class StockMarket {
     // TODO
   }
   
+  /**
+   * Access the admin commands.
+   */
   public void adminStart()  {
     boolean keepGoing = true;
     while (keepGoing)  {
