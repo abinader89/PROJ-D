@@ -38,8 +38,8 @@ Company VARCHAR(64),
 Trader VARCHAR(64),
 Quantity INT,
 Buy BOOL,
-CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT company_fk FOREIGN KEY(Company) references Company(Company_ID) ON DELETE CASCADE ON UPDATE CASCADE
+CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE,
+CONSTRAINT company_fk FOREIGN KEY(Company) references Company(Company_ID)
 );
 
 DROP TABLE IF EXISTS Stock_Prices;
@@ -65,7 +65,7 @@ Trader_name VARCHAR(64),
 Amount INT(11),
 PRIMARY KEY(Company, Trader_name),
 FOREIGN KEY(Company) references Company(Company_ID),
-FOREIGN KEY(Trader_name) references Traders(Trader_name)
+FOREIGN KEY(Trader_name) references Traders(Trader_name) ON DELETE CASCADE
 );
 
 INSERT INTO Company VALUES
