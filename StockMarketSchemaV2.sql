@@ -213,7 +213,7 @@ END
 //
 
 # procedure that returns total portfolio value
-DROP PROECEDURE IF EXISTS
+DROP PROCEDURE IF EXISTS
 DELIMITER //
 CREATE PROCEDURE portfolio_val(IN user_name Text)
 BEGIN
