@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
@@ -146,6 +147,7 @@ public class StockMarket {
         String command = "CALL update_stock(" + "'" + s.company + "', " + s.price + ")";
         this.executeUpdate(this.conn, command);
       }
+      System.out.println("Update successful!");
     }
     catch (Exception e)  {
       System.out.println("Update failed");
@@ -214,7 +216,7 @@ public class StockMarket {
   private void traderCommands() {
     boolean keepGoing = true;
     while (keepGoing) {
-      System.out.println("What would you like to do?");
+      System.out.println("\nWhat would you like to do?");
       String nextCommand = sc.next();
       this.isExit(nextCommand.toLowerCase());
       switch (nextCommand) {
@@ -230,12 +232,14 @@ public class StockMarket {
           break;
         case "in":
           this.checkInventory();
+          break;
         case "st":
           // CHECK THE STANDINGS
           // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "pr":
           this.displayCurrentStockInformation();
+          break;
         case "lo":
           this.characterName = null;
           this.run();
@@ -272,7 +276,22 @@ public class StockMarket {
    * This displays information about current stock prices.
    */
   private void displayCurrentStockInformation() {
-    // TODO
+    String viewStockInfo = "SELECT * FROM Stock_Prices;";
+    ResultSet rs = null;
+    try {
+      rs = this.executeQuery(this.conn, viewStockInfo);
+      ResultSetMetaData metadata = rs.getMetaData();
+        System.out.println(metadata.getColumnName(1) + "  |  " + metadata.getColumnName(3));
+      StringBuilder sb = new StringBuilder();
+      while (rs.next()) {
+        sb.append(String.format("%4s", rs.getString(1)));
+        sb.append("     |  $" + rs.getString(3) + "\n");
+        // System.out.println(rs.getString(1) + "  |  " + rs.getString(3));
+      }
+      System.out.print(sb.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
   
   /**
@@ -351,11 +370,15 @@ public class StockMarket {
     try {
       List<String> traders = new ArrayList<String>();
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      while (rs.next()) {
-        String traderName = rs.getString("trader_name");
-        String teamName = rs.getString("team");
-        traders.add(traderName + " - " + teamName);
-        System.out.println(traders.get(traders.size() - 1));
+      if (rs.getFetchSize() == 0) {
+        System.out.println("No results!");
+      } else {
+        while (rs.next()) {
+          String traderName = rs.getString("trader_name");
+          String teamName = rs.getString("team");
+          traders.add(traderName + " - " + teamName);
+          System.out.println(traders.get(traders.size() - 1));
+        }
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -371,12 +394,16 @@ public class StockMarket {
     try {
       List<String> leagues = new ArrayList<String>();
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      while (rs.next()) {
-        String teamName = rs.getString("Team");
-        leagues.add(teamName);
-        System.out.println(leagues.get(leagues.size() - 1));
+      if (rs.getFetchSize() == 0) {
+        System.out.println("No results!");
+      } else {
+        while (rs.next()) {
+          String teamName = rs.getString("Team");
+          leagues.add(teamName);
+          System.out.println(leagues.get(leagues.size() - 1));
+        }
       }
-    } catch (SQLException e) {
+    }catch (SQLException e) {
       e.printStackTrace();
     }
   }
