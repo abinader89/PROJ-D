@@ -281,7 +281,9 @@ public class StockMarket {
     try {
       rs = this.executeQuery(this.conn, viewStockInfo);
       ResultSetMetaData metadata = rs.getMetaData();
-        System.out.println(metadata.getColumnName(1) + "  |  " + metadata.getColumnName(3));
+      System.out.println(metadata.getColumnName(1) + "  |  " + metadata.getColumnName(3));
+      System.out.println("---------|---------");
+      
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
         sb.append(String.format("%4s", rs.getString(1)));
