@@ -188,14 +188,14 @@ public class StockMarket {
       String traderSelected = sc.next();
       this.isExit(traderSelected);
       try {
-        ResultSet rs1 = executeQuery(conn, "SELECT Trader_name FROM Traders WHERE Trader_Name = "
+        ResultSet rs = executeQuery(conn, "SELECT Trader_name FROM Traders WHERE Trader_Name = "
                 + "'" + traderSelected + "';");
-        if (!rs1.next()) {
+        if (!rs.next()) {
           System.out.println("Investor not found!\nPlease Specify Trader:\n");
         } else {
           this.characterName = traderSelected;
           System.out.println(traderSelected + " selected");
-  
+          
         }
       } catch (SQLException e) {
         System.out.println("ERROR: Could not execute the command");
@@ -204,9 +204,9 @@ public class StockMarket {
       if (this.characterName != null) {
         this.traderCommands();
       }
-          keepGoing = true;
-      }
+      keepGoing = true;
     }
+  }
   
   /**
    * A trader is selected. Now operate commands.
@@ -215,8 +215,8 @@ public class StockMarket {
     boolean keepGoing = true;
     while (keepGoing) {
       System.out.println("What would you like to do?");
-    String nextCommand = sc.next();
-    this.isExit(nextCommand.toLowerCase());
+      String nextCommand = sc.next();
+      this.isExit(nextCommand.toLowerCase());
       switch (nextCommand) {
         case "bu":
           // BUY SHIT
@@ -240,7 +240,7 @@ public class StockMarket {
           break;
         case "help":
           System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
-                  " stocks.\n[st] - Check the standings of the traders in the database.\n" +
+                  " stocks.\n[st] - Check the standings of the traders within the league.\n" +
                   "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
                   "of stocks available.\n[lo] - Logs you out of program.\n[help] - Displays this " +
                   "information.");
@@ -309,8 +309,8 @@ public class StockMarket {
           System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
                   "when finished specifying new traders to add to this firm.\n[up] - Updates" +
                   " the database with the most recent StockMarket values.\n[re] - Resets all the " +
-                  "information the program has for the traders\n[pl] - Play the stock market " +
-                  "game.\n[de] - Deletes a trader from the database\n[vl] - Show the " +
+                  "information the program has for the traders.\n[pl] - Play the stock market " +
+                  "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
                   "leagues in the database.\n[vt] - Shows the traders in the database.\n[help] - " +
                   "Displays this information.");
           keepGoing = true;
@@ -327,14 +327,15 @@ public class StockMarket {
    * Displays all of the traders in the database.
    */
   private void viewTraders() {
-    String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS;";
-    ResultSet rs1 = null;
+    String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS ORDER BY team;";
+    ResultSet rs = null;
     try {
       List<String> traders = new ArrayList<String>();
-      rs1 = this.executeQuery(this.conn, viewLeaguesQuery);
-      while (rs1.next()) {
-        String traderName = rs1.getString("trader_name");
-        traders.add(traderName);
+      rs = this.executeQuery(this.conn, viewLeaguesQuery);
+      while (rs.next()) {
+        String traderName = rs.getString("trader_name");
+        String teamName = rs.getString("team");
+        traders.add(traderName + " - " + teamName);
         System.out.println(traders.get(traders.size() - 1));
       }
     } catch (SQLException e) {
@@ -347,19 +348,19 @@ public class StockMarket {
    */
   private void viewLeagues() {
     String viewLeaguesQuery = "SELECT DISTINCT(team) FROM TRADERS;";
-    ResultSet rs1 = null;
+    ResultSet rs = null;
     try {
       List<String> leagues = new ArrayList<String>();
-      rs1 = this.executeQuery(this.conn, viewLeaguesQuery);
-      while (rs1.next()) {
-        String teamName = rs1.getString("Team");
+      rs = this.executeQuery(this.conn, viewLeaguesQuery);
+      while (rs.next()) {
+        String teamName = rs.getString("Team");
         leagues.add(teamName);
         System.out.println(leagues.get(leagues.size() - 1));
       }
     } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      e.printStackTrace();
     }
+  }
   
   /**
    * Deletes a trader from the database.
