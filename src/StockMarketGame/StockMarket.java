@@ -242,18 +242,28 @@ public class StockMarket {
           this.characterName = null;
           this.run();
           break;
+        case "ab":
+          this.checkBalance();
+          break;
         case "help":
           System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
                   " stocks.\n[st] - Check the standings of the traders within the league.\n" +
                   "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
-                  "of stocks available.\n[lo] - Logs you out of program.\n[help] - Displays this " +
-                  "information.");
+                  "of stocks available.\n[lo] - Logs you out of program.\n[ab] - Checks the " +
+                  "available balance of your trader.\n[help] - Displays this information.");
           break;
         default:
           System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
                   "available commands.\n");
       }
     }
+  }
+  
+  /**
+   * Checks the balance of your trader.
+   */
+  private void checkBalance() {
+    // TODO
   }
   
   /**
@@ -289,15 +299,18 @@ public class StockMarket {
         if (!rs1.next()) {
           System.out.println("No company found!");
         } else {
-            double price = (Double) rs1.getObject("price");
+          double price = (Double) rs1.getObject("price");
           System.out.println("Funds available: $" + funds + " ...total price $" + price * qty);
-            if (funds >= (price * qty)) {
-              for (int i = 0; i < qty; i++) {
+          if (funds >= (price * qty)) {
+            for (int i = 0; i < qty; i++) {
 //                executeUpdate(this.conn, BUY THE STOCK)
-                System.out.println(i + 1 + " stock(s) purchased from " + company.toUpperCase());
-              }
             }
-          System.out.println("Operation successful.");
+            System.out.println(qty + " stock(s) purchased from " + company.toUpperCase());
+            System.out.println("Operation successful.");
+            System.out.println("Remaining balance ...$" + (funds - (price * qty)) );
+          } else {
+            System.out.println("Insufficient funds for transaction.");
+          }
         }
       }
     } catch (Exception e) {
@@ -409,7 +422,7 @@ public class StockMarket {
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
       System.out.println("* Current Traders *");
-    
+      
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
         sb.append(String.format("%4s", rs.getString(1)));
@@ -430,7 +443,7 @@ public class StockMarket {
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
       System.out.println("* Current Leagues *");
-    
+      
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
         sb.append(rs.getString(1));
