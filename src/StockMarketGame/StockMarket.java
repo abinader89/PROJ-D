@@ -413,7 +413,7 @@ public class StockMarket {
     }
     List<String> players = new ArrayList<String>();
     keepGoing = true;
-    this.addTraders(keepGoing, players);
+    this.addTraders(players);
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
               + "'" + players.get(0) + "', 5000," + "'" + leagueName + "')");
@@ -428,23 +428,23 @@ public class StockMarket {
           }
         }
       }
-      System.out.println("Attempting to create:" + leagueName + "\ncreated, with traders:\n");
+      System.out.println("Attempting to insert into: " + leagueName + "\nTrader(s):\n");
       for (String p : players) {
         System.out.println(p);
       }
       this.executeUpdate(this.conn, insertTraders.toString());
     } catch (SQLException e) {
-      System.out.println("Creation of new league failed!");
+      System.out.println("Process failed, aborted!");
     }
     this.adminStart();
   }
   
   /**
    * Adds traders to the param list.
-   * @param keepGoing boolean
    * @param players List[String]
    */
-  private void addTraders(boolean keepGoing, List<String> players) {
+  private void addTraders(List<String> players) {
+    boolean keepGoing = true;
     String nextCommand;
     System.out.println("First trader name?");
     String traderName = sc.next();
