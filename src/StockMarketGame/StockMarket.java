@@ -221,12 +221,10 @@ public class StockMarket {
       this.isExit(nextCommand.toLowerCase());
       switch (nextCommand) {
         case "bu":
-          // BUY SHIT
           this.buyStock();
           // CALL PROCEDURE TO BUY STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "se":
-          // SELL SHIT
           this.sellStock();
           // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
@@ -235,6 +233,7 @@ public class StockMarket {
           break;
         case "st":
           // CHECK THE STANDINGS
+          this.standings();
           // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "pr":
@@ -259,10 +258,27 @@ public class StockMarket {
   }
   
   /**
+   * Displays the standings within the current trader's league.
+   */
+  private void standings() {
+    // TODO
+  }
+  
+  /**
    * Sells stock if the trader has enough of it in inventory.
    */
   private void sellStock() {
-    // TODO
+    String currentFundsQuery = "SELECT available_funds FROM traders WHERE trader_name = '"
+            + this.characterName + "';";
+    try {
+      ResultSet rs0 = this.executeQuery(this.conn, currentFundsQuery);
+      if (rs0.next()) {
+        double funds = (Double)rs0.getObject("available_funds");
+        System.out.println(funds);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
   
   /**
