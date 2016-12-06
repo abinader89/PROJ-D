@@ -343,14 +343,19 @@ public class StockMarket {
           this.viewTraders();
           keepGoing = true;
           break;
+        case "pr":
+          this.displayCurrentStockInformation();
+          keepGoing = true;
+          break;
         case "help":
           System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
                   "when finished specifying new traders to add to this firm.\n[up] - Updates" +
                   " the database with the most recent StockMarket values.\n[re] - Resets all the " +
                   "information the program has for the traders.\n[pl] - Play the stock market " +
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
-                  "leagues in the database.\n[vt] - Shows the traders in the database.\n[help] - " +
-                  "Displays this information.");
+                  "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
+                  "Check the current rates of stocks available.\n[help] - Displays this" +
+                  " information.");
           keepGoing = true;
           break;
         default:
