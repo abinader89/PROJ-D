@@ -313,7 +313,7 @@ public class StockMarket {
           System.out.println("Funds available: $" + funds + " ...total price $" + price * qty);
           if (funds >= (price * qty)) {
             String buyCall = "CALL buy_stock('" + company + "', " + "'" + this.characterName
-                    + "', " + price + ");";
+                    + "', " + price + ", " + qty + ");";
             for (int i = 0; i < qty; i++) {
               executeUpdate(this.conn, buyCall);
             }
