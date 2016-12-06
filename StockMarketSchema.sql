@@ -155,13 +155,17 @@ CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price INT
 # TRADER'S AVAILABLE FUNDS BY THE PRICE PASSED IN, AND INCREASE THE TRADER'S STOCK COUNT OF THE GIVEN
 # COMPANY BY 1.
 DROP PROCEDURE IF EXISTS buy_stock//
-CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE)
+CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE, quantity INT)
 	BEGIN
+		IF NOT EXISTS (SELECT * FROM Portfolio WHERE trader_name = trader AND company = stock_id)
+			THEN
+			INSERT INTO Portfolio VALUES (stock_ID, trader, 0);
+		END IF;
 		UPDATE Portfolio
-		SET Amount = Amount + 1
+		SET Amount = Amount + quantity
 		WHERE Trader_name = trader AND Company = stock_ID;
 		UPDATE Traders
-			SET Available_Funds = Available_Funds - price
+			SET Available_Funds = Available_Funds - price * quantity
 		WHERE Trader_name = trader;
 	END //
 

@@ -430,7 +430,7 @@ public class StockMarket {
    */
   private void viewTraders() {
     String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS ORDER BY team;";
-    ResultSet rs = null;
+    ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
       System.out.println("* Current Traders *");
@@ -451,7 +451,7 @@ public class StockMarket {
    */
   private void viewLeagues() {
     String viewLeaguesQuery = "SELECT DISTINCT(team) FROM TRADERS;";
-    ResultSet rs = null;
+    ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
       System.out.println("* Current Leagues *");
@@ -516,7 +516,6 @@ public class StockMarket {
       }
     }
     List<String> players = new ArrayList<String>();
-    keepGoing = true;
     this.addTraders(players);
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
