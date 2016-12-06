@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS Transactions;
 CREATE TABLE Transactions(
 StockID INT PRIMARY KEY auto_increment,
 Date_of DATE,
-Company VARCHAR(64),
+Company_ID VARCHAR(10),
 Trader VARCHAR(64),
 Quantity INT,
 Buy BOOL,
@@ -165,8 +165,9 @@ CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUB
 		SET Amount = Amount + quantity
 		WHERE Trader_name = trader AND Company = stock_ID;
 		UPDATE Traders
-			SET Available_Funds = Available_Funds - price * quantity
+			SET Available_Funds = Available_Funds - (price * quantity)
 		WHERE Trader_name = trader;
+		INSERT INTO Transactions VALUES (default, NOW(), stock_ID, trader);
 	END //
 
 # GIVEN THE TRADER NAME, THIS FUNCTION WILL RETURN THE TOTAL VALUE OF THE TRADER.

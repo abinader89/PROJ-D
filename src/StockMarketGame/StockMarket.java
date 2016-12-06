@@ -314,9 +314,7 @@ public class StockMarket {
           if (funds >= (price * qty)) {
             String buyCall = "CALL buy_stock('" + company + "', " + "'" + this.characterName
                     + "', " + price + ", " + qty + ");";
-            for (int i = 0; i < qty; i++) {
-              executeUpdate(this.conn, buyCall);
-            }
+            executeUpdate(this.conn, buyCall);
             System.out.println(qty + " stock(s) purchased from " + company.toUpperCase());
             System.out.println("Operation successful.");
             System.out.println("Remaining balance ...$" + (funds - (price * qty)) );
