@@ -270,7 +270,7 @@ public class StockMarket {
     boolean keepGoing = true;
     while (keepGoing)  {
       keepGoing = false;
-      System.out.println("Input command to execute.");
+      System.out.println("\nInput command to execute.");
       String traderSelected = sc.next().toLowerCase();
       this.isExit(traderSelected);
       switch (traderSelected)  {
@@ -428,13 +428,13 @@ public class StockMarket {
           }
         }
       }
-      System.out.println("League " + leagueName + " created, with traders:\n");
+      System.out.println("Attempting to create:" + leagueName + "\ncreated, with traders:\n");
       for (String p : players) {
         System.out.println(p);
       }
       this.executeUpdate(this.conn, insertTraders.toString());
     } catch (SQLException e) {
-      e.printStackTrace();
+      System.out.println("Creation of new league failed!");
     }
     this.adminStart();
   }
