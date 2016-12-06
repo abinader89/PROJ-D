@@ -407,18 +407,15 @@ public class StockMarket {
     String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS ORDER BY team;";
     ResultSet rs = null;
     try {
-      List<String> traders = new ArrayList<String>();
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      if (rs.getFetchSize() == 0) {
-        System.out.println("No results!");
-      } else {
-        while (rs.next()) {
-          String traderName = rs.getString("trader_name");
-          String teamName = rs.getString("team");
-          traders.add(traderName + " - " + teamName);
-          System.out.println(traders.get(traders.size() - 1));
-        }
+      System.out.println("* Current Traders *");
+    
+      StringBuilder sb = new StringBuilder();
+      while (rs.next()) {
+        sb.append(String.format("%4s", rs.getString(1)));
+        sb.append(" - " + rs.getString(2) + "\n");
       }
+      System.out.print(sb.toString());
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -431,18 +428,15 @@ public class StockMarket {
     String viewLeaguesQuery = "SELECT DISTINCT(team) FROM TRADERS;";
     ResultSet rs = null;
     try {
-      List<String> leagues = new ArrayList<String>();
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      if (rs.getFetchSize() == 0) {
-        System.out.println("No results!");
-      } else {
-        while (rs.next()) {
-          String teamName = rs.getString("Team");
-          leagues.add(teamName);
-          System.out.println(leagues.get(leagues.size() - 1));
-        }
+      System.out.println("* Current Leagues *");
+    
+      StringBuilder sb = new StringBuilder();
+      while (rs.next()) {
+        sb.append(rs.getString(1));
       }
-    }catch (SQLException e) {
+      System.out.print(sb.toString());
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
