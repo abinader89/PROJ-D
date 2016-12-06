@@ -155,25 +155,45 @@ CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price INT
 # TRADER'S AVAILABLE FUNDS BY THE PRICE PASSED IN, AND INCREASE THE TRADER'S STOCK COUNT OF THE GIVEN
 # COMPANY BY 1.
 DROP PROCEDURE IF EXISTS buy_stock//
-CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE, quantity INT)
+CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE)
 	BEGIN
-		IF NOT EXISTS (SELECT * FROM Portfolio WHERE trader_name = trader AND company = stock_id)
-			THEN
-			INSERT INTO Portfolio VALUES (stock_ID, trader, 0);
-		END IF;
 		UPDATE Portfolio
-		SET Amount = Amount + quantity
+		SET Amount = Amount + 1
 		WHERE Trader_name = trader AND Company = stock_ID;
 		UPDATE Traders
-			SET Available_Funds = Available_Funds - price * quantity
-		WHERE Trader_name = trader;
+			SET Available_Funds = Available_Funds - price
+		WHERE Trader_name = trader
+		UPDATE Company
+			SET OutStanding_Shares = OutStanding_Shares - price
+		WHERE Company_name = stock_ID;
 	END //
 
 # GIVEN THE TRADER NAME, THIS FUNCTION WILL RETURN THE TOTAL VALUE OF THE TRADER.
 DROP FUNCTION IF EXISTS get_trader_value//
-CREATE FUNCTION get_trader_value (trader_name VARCHAR(64))
-	RETURNS INT
+CREATE FUNCTION get_trader_value (trader VARCHAR(64))
+	RETURNS DOUBLE
+	
 	BEGIN
+		DECLARE funds DOUBLE;
+		DECLARE stock_value DOUBLE;
+		
+		SELECT Available_Funds
+		INTO funds
+		FROM(
+			SELECT Available_Funds
+			FROM Traders
+			WHERE Trader_name = trader
+		    ) AS avail_funds;
+		
+		SELECT stk_value
+		INTO stock_value 
+		FROM(
+			SELECT SUM(p.Amount * s.Price) as stk_value
+			FROM Portfolio p , Stock_prices s
+			WHERE p.Trader_name = trader AND
+			      p.Company = s.Company
+		    ) AS stk_value;
+		RETURN funds + stock_value;
 
 	END //
 DELIMITER ;
