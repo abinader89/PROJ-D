@@ -288,7 +288,6 @@ public class StockMarket {
       while (rs.next()) {
         sb.append(String.format("%4s", rs.getString(1)));
         sb.append("     |  $" + rs.getString(3) + "\n");
-        // System.out.println(rs.getString(1) + "  |  " + rs.getString(3));
       }
       System.out.print(sb.toString());
     } catch (SQLException e) {
