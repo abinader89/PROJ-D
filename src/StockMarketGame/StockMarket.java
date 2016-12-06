@@ -82,7 +82,7 @@ public class StockMarket {
         this.conn = this.getConnection();
         keepGoing = false;
       } catch (Exception e) {
-        // HANDLE
+        System.out.println("Invalid credentials!\nTry again.\n");
       }
     }
   }
@@ -233,7 +233,6 @@ public class StockMarket {
           // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "pr":
-          // CHECK CURRENT PRICES OF ALL THE STOCKS
           this.displayCurrentStockInformation();
         case "lo":
           this.characterName = null;
@@ -298,22 +297,69 @@ public class StockMarket {
         case "pl":
           this.userStart();
           break;
+        case "vl":
+          this.viewLeagues();
+          keepGoing = true;
+          break;
+        case "vt":
+          this.viewTraders();
+          keepGoing = true;
+          break;
         case "help":
           System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
                   "when finished specifying new traders to add to this firm.\n[up] - Updates" +
                   " the database with the most recent StockMarket values.\n[re] - Resets all the " +
                   "information the program has for the traders\n[pl] - Play the stock market " +
-                  "game.\n[de] - Deletes a trader from the database\n[help] - Displays this " +
-                  "information.");
+                  "game.\n[de] - Deletes a trader from the database\n[vl] - Show the " +
+                  "leagues in the database.\n[vt] - Shows the traders in the database.\n[help] - " +
+                  "Displays this information.");
           keepGoing = true;
           break;
         default:
-          keepGoing = true;
           System.out.print("Invalid input!\nPlease use the [help] command for a list of " +
                   "available commands.\n");
+          keepGoing = true;
       }
     }
   }
+  
+  /**
+   * Displays all of the traders in the database.
+   */
+  private void viewTraders() {
+    String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS;";
+    ResultSet rs1 = null;
+    try {
+      List<String> traders = new ArrayList<String>();
+      rs1 = this.executeQuery(this.conn, viewLeaguesQuery);
+      while (rs1.next()) {
+        String traderName = rs1.getString("trader_name");
+        traders.add(traderName);
+        System.out.println(traders.get(traders.size() - 1));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Displays all of the leagues in the database.
+   */
+  private void viewLeagues() {
+    String viewLeaguesQuery = "SELECT DISTINCT(team) FROM TRADERS;";
+    ResultSet rs1 = null;
+    try {
+      List<String> leagues = new ArrayList<String>();
+      rs1 = this.executeQuery(this.conn, viewLeaguesQuery);
+      while (rs1.next()) {
+        String teamName = rs1.getString("Team");
+        leagues.add(teamName);
+        System.out.println(leagues.get(leagues.size() - 1));
+      }
+    } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
   
   /**
    * Deletes a trader from the database.
@@ -347,16 +393,16 @@ public class StockMarket {
   public void createLeague() {
     boolean keepGoing = true;
     System.out.println("League name?");
-    String firmName = sc.next();
+    String leagueName = sc.next();
     while (keepGoing) {
-      System.out.println("Confirm league name " + firmName + "?\n[y|n]");
+      System.out.println("Confirm league name " + leagueName + "?\n[y|n]");
       switch (sc.next().toLowerCase()) {
         case "y":
           keepGoing = false;
           break;
         case "n":
           System.out.println("Input new league name:\n");
-          firmName = sc.next();
+          leagueName = sc.next();
           break;
         case "exit":
           this.isExit("exit");
@@ -366,31 +412,22 @@ public class StockMarket {
     }
     List<String> players = new ArrayList<String>();
     keepGoing = true;
-    System.out.println("First trader name?");
-    String traderName = sc.next();
-    this.addTraders(keepGoing, true, traderName, players);
-    keepGoing = true;
-    System.out.println("Next trader name or [done]?");
-    traderName = sc.next();
-    if (!(traderName.equals("done"))) {
-      this.addTraders(keepGoing, false, traderName, players);
-      // ADD TRADERS INTO THE DATABASE
-    }
+    this.addTraders(keepGoing, players);
     try {
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
-              + "'" + players.get(0) + "', 5000," + "'" + firmName + "')");
+              + "'" + players.get(0) + "', 5000," + "'" + leagueName + "')");
       if (players.size() == 1) {
         insertTraders.append(";");
       } else {
         for (int ii = 1; ii < players.size(); ii++) {
-          insertTraders.append(", (" + "'" + players.get(ii) + "', 5000," + "'" + firmName +
+          insertTraders.append(", (" + "'" + players.get(ii) + "', 5000," + "'" + leagueName +
                   "')");
           if (ii == players.size() - 1) {
             insertTraders.append(";");
           }
         }
       }
-      System.out.println("Firm " + firmName + " created, with traders:\n");
+      System.out.println("League " + leagueName + " created, with traders:\n");
       for (String p : players) {
         System.out.println(p);
       }
@@ -404,46 +441,42 @@ public class StockMarket {
   /**
    * Adds traders to the param list.
    * @param keepGoing boolean
-   * @param firstTrader boolean
-   * @param traderName String
    * @param players List[String]
    */
-  private void addTraders(boolean keepGoing, boolean firstTrader, String traderName, List<String>
-          players) {
+  private void addTraders(boolean keepGoing, List<String> players) {
     String nextCommand;
+    System.out.println("First trader name?");
+    String traderName = sc.next();
     while (keepGoing) {
+      keepGoing = false;
       if (traderName != null) {
         System.out.println("Confirm adding " + traderName + "?\n[y|n]");
       }
       nextCommand = sc.next();
       switch (nextCommand.toLowerCase()) {
         case "y":
-          if (firstTrader) {
+          keepGoing = true;
+          players.add(traderName);
+          System.out.println("Next trader or [done]?");
+          traderName = sc.next();
+          if (traderName.toLowerCase().equals("done")) {
             keepGoing = false;
           }
-          players.add(traderName);
-          traderName = null;
-          if (!(firstTrader)) {
-            System.out.println("Next trader name or [done]?");
-        }
           break;
         case "n":
           System.out.println("Input new trader name:");
           traderName = sc.next();
           if (traderName.toLowerCase().equals("done")) {
             keepGoing = false;
+          } else {
+            keepGoing = true;
           }
           break;
-        case "done":
-          if (!(firstTrader)) {
-            keepGoing = false;
-            break;
-          }
         case "exit":
           this.isExit("exit");
           break;
         default:
-          System.out.println("Invalid input!");
+          System.out.println("Invalid input!\ninput 'done' when finished adding traders.");
       }
     }
   }
