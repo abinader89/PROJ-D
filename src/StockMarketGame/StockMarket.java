@@ -263,7 +263,17 @@ public class StockMarket {
    * Checks the balance of your trader.
    */
   private void checkBalance() {
-    // TODO
+    String availableBalance = "SELECT available_funds FROM traders WHERE trader_name = '" +
+            this.characterName + "';";
+    try {
+      ResultSet rs = this.executeQuery(this.conn, availableBalance);
+      if (rs.next()) {
+        double balance = (Double) rs.getObject("available_funds");
+        System.out.println("Available balance ...$" + balance);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
   
   /**
@@ -302,8 +312,10 @@ public class StockMarket {
           double price = (Double) rs1.getObject("price");
           System.out.println("Funds available: $" + funds + " ...total price $" + price * qty);
           if (funds >= (price * qty)) {
+            String buyCall = "CALL buy_stock('" + company + "', " + "'" + this.characterName
+                    + "', " + price + ");";
             for (int i = 0; i < qty; i++) {
-//                executeUpdate(this.conn, BUY THE STOCK)
+              executeUpdate(this.conn, buyCall);
             }
             System.out.println(qty + " stock(s) purchased from " + company.toUpperCase());
             System.out.println("Operation successful.");

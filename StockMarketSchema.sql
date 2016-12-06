@@ -146,7 +146,7 @@ END //
 # AVAILABLE FUNDS BY THE PRICE PASSED IN, AND DECREMENT THEIR STOCK COUNT OF THE COMPANY'S STOCK
 # BY 1.
 DROP PROCEDURE IF EXISTS sell_stock//
-CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader_name VARCHAR(64), price INT(10))
+CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price INT(10))
 	BEGIN
 
 	END //
@@ -155,9 +155,14 @@ CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader_name VARCHAR(64), pric
 # TRADER'S AVAILABLE FUNDS BY THE PRICE PASSED IN, AND INCREASE THE TRADER'S STOCK COUNT OF THE GIVEN
 # COMPANY BY 1.
 DROP PROCEDURE IF EXISTS buy_stock//
-CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader_name VARCHAR(64), price INT(10))
+CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE)
 	BEGIN
-
+		UPDATE Portfolio
+		SET Amount = Amount + 1
+		WHERE Trader_name = trader AND Company = stock_ID;
+		UPDATE Traders
+			SET Available_Funds = Available_Funds - price
+		WHERE Trader_name = trader;
 	END //
 
 # GIVEN THE TRADER NAME, THIS FUNCTION WILL RETURN THE TOTAL VALUE OF THE TRADER.
