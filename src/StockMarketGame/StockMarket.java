@@ -247,7 +247,7 @@ public class StockMarket {
           break;
         case "help":
           System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
-                  " stocks.\n[st] - Check the standings of the traders within the league.\n" +
+                  " stocks.\n[st] - Check the standings of the traders within the team.\n" +
                   "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
                   "of stocks available.\n[lo] - Logs you out of program.\n[ab] - Checks the " +
                   "available balance of your trader.\n[help] - Displays this information.");
@@ -277,7 +277,7 @@ public class StockMarket {
   }
   
   /**
-   * Displays the standings within the current trader's league.
+   * Displays the standings within the current trader's team.
    */
   private void standings() {
     String viewStockInfo = "SELECT trader_name, get_trader_value(trader_name) AS Total_Value " +
@@ -286,7 +286,7 @@ public class StockMarket {
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewStockInfo);
-      System.out.println("Inter-league Standings");
+      System.out.println("Inter-team Standings");
       System.out.println("----------------------");
     
       StringBuilder sb = new StringBuilder();
@@ -481,12 +481,12 @@ public class StockMarket {
           keepGoing = true;
           break;
         case "help":
-          System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
+          System.out.println("Available commands are:\n[ne] - Creates a new team, enter done " +
                   "when finished specifying new traders to add to this firm.\n[up] - Updates" +
                   " the database with the most recent StockMarket values.\n[re] - Resets all the " +
                   "information the program has for the traders.\n[pl] - Play the stock market " +
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
-                  "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
+                  "teams in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
                   "Check the current rates of stocks available.\n[cl] - Checks the " +
                   "transaction log on the database.\n[help] - Displays this information.");
           keepGoing = true;
@@ -535,7 +535,7 @@ public class StockMarket {
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      System.out.println("* Current Leagues *");
+      System.out.println("* Current Teams *");
       
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
@@ -574,7 +574,7 @@ public class StockMarket {
   }
   
   /**
-   * This method will create a league.
+   * This method will create a Team.
    */
   public void createLeague() {
     boolean keepGoing = true;
