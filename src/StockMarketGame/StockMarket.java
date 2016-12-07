@@ -281,7 +281,7 @@ public class StockMarket {
    */
   private void standings() {
     String viewStockInfo = "SELECT trader_name, get_trader_value(trader_name) AS Total_Value " +
-            "FROM Traders WHERE Team = (SELECT TEAM FROM Traders WHERE trader_name = '"
+            "FROM Traders WHERE league = (SELECT league FROM Traders WHERE trader_name = '"
             + this.characterName + "') ORDER BY total_value;";
     ResultSet rs;
     try {
