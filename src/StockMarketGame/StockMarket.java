@@ -487,7 +487,7 @@ public class StockMarket {
                   "information the program has for the traders.\n[pl] - Play the stock market " +
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
                   "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
-                  "Check the current rates of stocks available.\n[cl] Checks the " +
+                  "Check the current rates of stocks available.\n[cl] - Checks the " +
                   "transaction log on the database.\n[help] - Displays this information.");
           keepGoing = true;
           break;
