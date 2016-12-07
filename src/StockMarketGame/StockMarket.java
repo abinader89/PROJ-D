@@ -476,6 +476,10 @@ public class StockMarket {
           this.displayCurrentStockInformation();
           keepGoing = true;
           break;
+        case "cl":
+          this.checkLog();
+          keepGoing = true;
+          break;
         case "help":
           System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
                   "when finished specifying new traders to add to this firm.\n[up] - Updates" +
@@ -483,8 +487,8 @@ public class StockMarket {
                   "information the program has for the traders.\n[pl] - Play the stock market " +
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
                   "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
-                  "Check the current rates of stocks available.\n[help] - Displays this" +
-                  " information.");
+                  "Check the current rates of stocks available.\n[cl] Checks the " +
+                  "transaction log on the database.\n[help] - Displays this information.");
           keepGoing = true;
           break;
         default:
@@ -493,6 +497,29 @@ public class StockMarket {
           keepGoing = true;
       }
     }
+  }
+  
+  /**
+   * Displays the transaction log.
+   */
+  private void checkLog() {
+    DBTablePrinter.printTable(this.conn, "transactions");
+//    String queryLog = "SELECT Date_of, Company_ID, Trader, Quantity, Buy FROM transactions LIMIT " +
+//            "100;";
+//    ResultSet rs;
+//    try {
+//      rs = this.executeQuery(this.conn, queryLog);
+//      System.out.println("* (DATE, Company Code, Trader, Quantity, Transaction Type (1 is Bought,"
+//              + " 2 is sold) *");
+//
+//      StringBuilder sb = new StringBuilder();
+//      while (rs.next()) {
+//        sb.append(rs.get + "\n");
+//      }
+//      System.out.println(sb.toString());
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
   }
   
   /**
