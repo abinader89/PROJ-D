@@ -249,8 +249,8 @@ public class StockMarket {
           System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
                   " stocks.\n[st] - Check the standings of the traders within the league.\n" +
                   "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
-                  "of stocks available.\n[lo] - Logs you out of program.\n[ab] - Checks the " +
-                  "available balance of your trader.\n[help] - Displays this information.");
+                  "of stocks available.\n[ab] - Checks the available balance of your trader.\n" +
+                  "[lo] - Logs you out of program.\n[help] - Displays this information.");
           break;
         default:
           System.out.println("Invalid input!\nPlease use the [help] command for a list of " +
