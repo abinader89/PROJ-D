@@ -2,6 +2,5 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/StockMarketSchema.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/StockMarketSchemaV2.sql" dialect="MySQL" />
   </component>
 </project>

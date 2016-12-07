@@ -280,7 +280,25 @@ public class StockMarket {
    * Displays the standings within the current trader's league.
    */
   private void standings() {
-    // TODO
+    String viewStockInfo = "SELECT trader_name, get_trader_value(trader_name) AS Total_Value " +
+            "FROM Traders WHERE Team = (SELECT TEAM FROM Traders WHERE trader_name = '"
+            + this.characterName + "') ORDER BY total_value;";
+    ResultSet rs;
+    try {
+      rs = this.executeQuery(this.conn, viewStockInfo);
+      ResultSetMetaData metadata = rs.getMetaData();
+      System.out.println("Inter-league Standings");
+      System.out.println("----------------------");
+    
+      StringBuilder sb = new StringBuilder();
+      while (rs.next()) {
+        sb.append(rs.getString(1));
+        sb.append(" - $" + rs.getString(2) + "\n");
+      }
+      System.out.print(sb.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
   
   /**
@@ -333,7 +351,7 @@ public class StockMarket {
    */
   private void displayCurrentStockInformation() {
     String viewStockInfo = "SELECT * FROM Stock_Prices;";
-    ResultSet rs = null;
+    ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewStockInfo);
       ResultSetMetaData metadata = rs.getMetaData();
@@ -355,7 +373,24 @@ public class StockMarket {
    * Checks the inventory of this trader.
    */
   private void checkInventory() {
-    // TODO
+    String viewStockInfo = "SELECT Company, Amount FROM Portfolio WHERE trader_name = '"
+            + this.characterName + "';";
+    ResultSet rs;
+    try {
+      rs = this.executeQuery(this.conn, viewStockInfo);
+      ResultSetMetaData metadata = rs.getMetaData();
+      System.out.println(metadata.getColumnName(1) + "  |  " + metadata.getColumnName(2));
+      System.out.println("---------|---------");
+    
+      StringBuilder sb = new StringBuilder();
+      while (rs.next()) {
+        sb.append(String.format("%4s", rs.getString(1)));
+        sb.append("     |  " + rs.getString(2) + "\n");
+      }
+      System.out.print(sb.toString());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
   
   /**
@@ -435,7 +470,7 @@ public class StockMarket {
       
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
-        sb.append(String.format("%4s", rs.getString(1)));
+        sb.append(rs.getString(1));
         sb.append(" - " + rs.getString(2) + "\n");
       }
       System.out.print(sb.toString());
@@ -456,9 +491,9 @@ public class StockMarket {
       
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
-        sb.append(rs.getString(1));
+        sb.append(rs.getString(1) + "\n");
       }
-      System.out.print(sb.toString());
+      System.out.println(sb.toString());
     } catch (SQLException e) {
       e.printStackTrace();
     }

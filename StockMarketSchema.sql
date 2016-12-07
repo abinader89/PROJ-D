@@ -140,7 +140,7 @@ CREATE PROCEDURE update_stock
 BEGIN
 UPDATE Stock_Prices
 	SET Date_of = now(), Price = new_price
-	WHERE company_ID = stock_ID;
+	WHERE company = stock_ID;
 END //
 
 # GIVEN THE COMPANY, TRADER NAME, AND PRICE OF THE STOCK, THIS WILL INCREASE THE TRADER'S
@@ -175,11 +175,9 @@ CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUB
 DROP FUNCTION IF EXISTS get_trader_value//
 CREATE FUNCTION get_trader_value (trader VARCHAR(64))
 	RETURNS DOUBLE
-	
 	BEGIN
 		DECLARE funds DOUBLE;
 		DECLARE stock_value DOUBLE;
-		
 		SELECT Available_Funds
 		INTO funds
 		FROM(
@@ -187,7 +185,8 @@ CREATE FUNCTION get_trader_value (trader VARCHAR(64))
 			FROM Traders
 			WHERE Trader_name = trader
 		    ) AS avail_funds;
-		
+		IF EXISTS (SELECT * FROM portfolio WHERE trader_name = trader)
+			THEN
 		SELECT stk_value
 		INTO stock_value 
 		FROM(
@@ -196,10 +195,11 @@ CREATE FUNCTION get_trader_value (trader VARCHAR(64))
 			WHERE p.Trader_name = trader AND
 			      p.Company = s.Company
 		    ) AS stk_value;
+				ELSE
+					SELECT 0 INTO stock_value;
+					END IF;
 		RETURN funds + stock_value;
-
 	END //
-DELIMITER ;
 
 
 
