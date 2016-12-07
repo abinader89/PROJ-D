@@ -147,9 +147,15 @@ END //
 # AVAILABLE FUNDS BY THE PRICE PASSED IN, AND DECREMENT THEIR STOCK COUNT OF THE COMPANY'S STOCK
 # BY 1.
 DROP PROCEDURE IF EXISTS sell_stock//
-CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price INT(10))
+CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE, qty INT)
 	BEGIN
-
+		UPDATE Portfolio
+		SET Amount = Amount - qty
+		WHERE Trader_name = trader AND Company = stock_ID;
+		UPDATE Traders
+		SET Available_Funds = Available_Funds + (price * qty)
+		WHERE Trader_name = trader;
+		INSERT INTO Transactions VALUES (DEFAULT, NOW(), stock_ID, trader, qty, FALSE);
 	END //
 
 # GIVEN THE COMPANY, TRADER NAME, AND PRICE OF THE STOCK, THIS PROCEDURE WILL DECREMENT THE
