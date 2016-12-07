@@ -286,7 +286,6 @@ public class StockMarket {
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewStockInfo);
-      ResultSetMetaData metadata = rs.getMetaData();
       System.out.println("Inter-league Standings");
       System.out.println("----------------------");
     
@@ -311,8 +310,9 @@ public class StockMarket {
     int qty = sc.nextInt();
     String currentFundsQuery = "SELECT available_funds FROM traders WHERE trader_name = '"
             + characterName + "'";
-    String currentStockQuery = "SELECT Amount, WHERE company = '" + company + "', AND trader_name"
-            + " = '" + this.characterName + "'";
+    String currentStockQuery = "SELECT Amount FROM PORTFOLIO WHERE company = '" + company + "' " +
+            "AND trader_name"
+            + " = '" + this.characterName + "';";
     String priceQuery = "SELECT PRICE FROM stock_prices where company = '" + company + "';";
     try {
       ResultSet rs0 = this.executeQuery(this.conn, currentStockQuery);
@@ -321,12 +321,12 @@ public class StockMarket {
       if (!rs0.next()
               || !rs1.next()
               || !rs2.next()) {
-        System.out.println("Something went wrong!1");
+        System.out.println("Something went wrong!");
       } else {
         int stockOwned = (Integer) rs0.getObject("Amount");
         double price = (Double) rs1.getObject("Price");
         double funds = (Double) rs2.getObject("available_funds");
-          System.out.println("Stock owned: " + stockOwned + " ...Selling at  " +  "$" +
+          System.out.println("Stock owned: " + stockOwned + " ...Selling at " +  "$" +
                   price * qty);
           if (stockOwned >= qty) {
             String sellCall = "CALL sell_stock('" + company + "', " + "'" + this.characterName
@@ -334,13 +334,14 @@ public class StockMarket {
             executeUpdate(this.conn, sellCall);
             System.out.println(qty + " stock(s) sold from " + company.toUpperCase());
             System.out.println("Operation successful.");
-            System.out.println("Remaining balance ...$" + (funds - (price * qty)));
+            System.out.println("Remaining balance ...$" + (funds + (price * qty)));
           } else {
             System.out.println("Insufficient stocks for transaction.");
           }
         }
     } catch (Exception e) {
       System.out.println("Something went wrong!2");
+      e.printStackTrace();
     }
   }
   
