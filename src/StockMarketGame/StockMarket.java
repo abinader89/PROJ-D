@@ -62,7 +62,7 @@ public class StockMarket {
   private final int portNumber = 3306;
   
   // The name of the database we are testing with (this default is installed with MySQL)
-  private final String dbName = "StockMarket";
+  private final String dbName = "StockMarket?characterEncoding=UTF-8&useSSL=false";
   
   private Connection conn;
   
