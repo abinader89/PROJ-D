@@ -321,7 +321,7 @@ public class StockMarket {
       if (!rs0.next()
               || !rs1.next()
               || !rs2.next()) {
-        System.out.println("Something went wrong!");
+        System.out.println("Something went wrong!1");
       } else {
         int stockOwned = (Integer) rs0.getObject("Amount");
         double price = (Double) rs1.getObject("Price");
@@ -340,7 +340,7 @@ public class StockMarket {
           }
         }
     } catch (Exception e) {
-      System.out.println("Something went wrong!");
+      System.out.println("Something went wrong!2");
     }
   }
   

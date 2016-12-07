@@ -130,7 +130,6 @@ INSERT INTO Stock_Prices VALUES
 
 	
 DELIMITER //
-
 DROP PROCEDURE IF EXISTS update_stock//
 CREATE PROCEDURE update_stock
 (
@@ -206,6 +205,8 @@ CREATE FUNCTION get_trader_value (trader VARCHAR(64))
 					END IF;
 		RETURN funds + stock_value;
 	END //
+
+DELIMITER ;
 
 
 
