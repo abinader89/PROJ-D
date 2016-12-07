@@ -504,22 +504,6 @@ public class StockMarket {
    */
   private void checkLog() {
     DBTablePrinter.printTable(this.conn, "transactions");
-//    String queryLog = "SELECT Date_of, Company_ID, Trader, Quantity, Buy FROM transactions LIMIT " +
-//            "100;";
-//    ResultSet rs;
-//    try {
-//      rs = this.executeQuery(this.conn, queryLog);
-//      System.out.println("* (DATE, Company Code, Trader, Quantity, Transaction Type (1 is Bought,"
-//              + " 2 is sold) *");
-//
-//      StringBuilder sb = new StringBuilder();
-//      while (rs.next()) {
-//        sb.append(rs.get + "\n");
-//      }
-//      System.out.println(sb.toString());
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    }
   }
   
   /**

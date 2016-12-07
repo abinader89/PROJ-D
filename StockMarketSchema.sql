@@ -37,7 +37,7 @@ Date_of DATE,
 Company_ID VARCHAR(10),
 Trader VARCHAR(64),
 Quantity INT,
-Buy BOOL,
+Buy TINYINT,
 PRIMARY KEY (transaction_ID),
 CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE,
 CONSTRAINT company_fk FOREIGN KEY(Company_ID) references Company(Company_ID)
