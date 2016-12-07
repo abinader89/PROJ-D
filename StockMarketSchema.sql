@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
 Trader_Name VARCHAR(64) PRIMARY KEY,
 Available_Funds DOUBLE(10, 2),
-Team VARCHAR(64)
+League VARCHAR(64)
 );
 
 /*
@@ -37,7 +37,7 @@ Date_of DATE,
 Company_ID VARCHAR(10),
 Trader VARCHAR(64),
 Quantity INT,
-Buy TINYINT,
+Buy VARCHAR(10),
 PRIMARY KEY (transaction_ID),
 CONSTRAINT trader_fk FOREIGN KEY(Trader) references Traders(Trader_name) ON DELETE CASCADE,
 CONSTRAINT company_fk FOREIGN KEY(Company_ID) references Company(Company_ID)
@@ -154,7 +154,7 @@ CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOU
 		UPDATE Traders
 		SET Available_Funds = Available_Funds + (price * qty)
 		WHERE Trader_name = trader;
-		INSERT INTO Transactions VALUES (DEFAULT, NOW(), stock_ID, trader, qty, FALSE);
+		INSERT INTO Transactions VALUES (DEFAULT, NOW(), stock_ID, trader, qty, "FALSE");
 	END //
 
 # GIVEN THE COMPANY, TRADER NAME, AND PRICE OF THE STOCK, THIS PROCEDURE WILL DECREMENT THE
@@ -173,7 +173,7 @@ CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUB
 		UPDATE Traders
 			SET Available_Funds = Available_Funds - (price * qty)
 		WHERE Trader_name = trader;
-		INSERT INTO Transactions VALUES (DEFAULT, NOW(), stock_ID, trader, qty, TRUE);
+		INSERT INTO Transactions VALUES (DEFAULT, NOW(), stock_ID, trader, qty, "TRUE");
 	END //
 
 # GIVEN THE TRADER NAME, THIS FUNCTION WILL RETURN THE TOTAL VALUE OF THE TRADER.

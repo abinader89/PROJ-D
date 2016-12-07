@@ -247,7 +247,7 @@ public class StockMarket {
           break;
         case "help":
           System.out.println("Available commands are:\n[bu] - Buy available stocks.\n[se] - Sell" +
-                  " stocks.\n[st] - Check the standings of the traders within the team.\n" +
+                  " stocks.\n[st] - Check the standings of the traders within the league.\n" +
                   "[in] - Check current inventory of stocks.\n[pr] - Check the current rates " +
                   "of stocks available.\n[lo] - Logs you out of program.\n[ab] - Checks the " +
                   "available balance of your trader.\n[help] - Displays this information.");
@@ -277,7 +277,7 @@ public class StockMarket {
   }
   
   /**
-   * Displays the standings within the current trader's team.
+   * Displays the standings within the current trader's league.
    */
   private void standings() {
     String viewStockInfo = "SELECT trader_name, get_trader_value(trader_name) AS Total_Value " +
@@ -286,8 +286,8 @@ public class StockMarket {
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewStockInfo);
-      System.out.println("Inter-team Standings");
-      System.out.println("----------------------");
+      System.out.println("League Standings");
+      System.out.println("-----------------");
     
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
@@ -326,8 +326,8 @@ public class StockMarket {
         int stockOwned = (Integer) rs0.getObject("Amount");
         double price = (Double) rs1.getObject("Price");
         double funds = (Double) rs2.getObject("available_funds");
-          System.out.println("Stock owned: " + stockOwned + " ...Selling at " +  "$" +
-                  price * qty);
+          System.out.println("Stock owned: " + stockOwned + " ...attempting to sell " + qty
+                  + " at $" + price * qty + " ($" + price + " each)");
           if (stockOwned >= qty) {
             String sellCall = "CALL sell_stock('" + company + "', " + "'" + this.characterName
                     + "', " + price + ", " + qty + ");";
@@ -481,12 +481,12 @@ public class StockMarket {
           keepGoing = true;
           break;
         case "help":
-          System.out.println("Available commands are:\n[ne] - Creates a new team, enter done " +
-                  "when finished specifying new traders to add to this firm.\n[up] - Updates" +
+          System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
+                  "when finished specifying new traders to add to this league.\n[up] - Updates" +
                   " the database with the most recent StockMarket values.\n[re] - Resets all the " +
                   "information the program has for the traders.\n[pl] - Play the stock market " +
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
-                  "teams in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
+                  "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
                   "Check the current rates of stocks available.\n[cl] - Checks the " +
                   "transaction log on the database.\n[help] - Displays this information.");
           keepGoing = true;
@@ -510,7 +510,7 @@ public class StockMarket {
    * Displays all of the traders in the database.
    */
   private void viewTraders() {
-    String viewLeaguesQuery = "SELECT trader_name, team FROM TRADERS ORDER BY team;";
+    String viewLeaguesQuery = "SELECT trader_name, league FROM TRADERS ORDER BY league;";
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
@@ -531,11 +531,11 @@ public class StockMarket {
    * Displays all of the leagues in the database.
    */
   private void viewLeagues() {
-    String viewLeaguesQuery = "SELECT DISTINCT(team) FROM TRADERS;";
+    String viewLeaguesQuery = "SELECT DISTINCT(league) FROM TRADERS;";
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
-      System.out.println("* Current Teams *");
+      System.out.println("* Current Leagues *");
       
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
@@ -574,7 +574,7 @@ public class StockMarket {
   }
   
   /**
-   * This method will create a Team.
+   * This method will create a League.
    */
   public void createLeague() {
     boolean keepGoing = true;
@@ -594,6 +594,7 @@ public class StockMarket {
           this.isExit("exit");
         default:
           System.out.println("Invalid input!");
+          
       }
     }
     List<String> players = new ArrayList<String>();
@@ -662,6 +663,7 @@ public class StockMarket {
           break;
         default:
           System.out.println("Invalid input!\ninput 'done' when finished adding traders.");
+          keepGoing = true;
       }
     }
   }
