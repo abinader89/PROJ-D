@@ -8,7 +8,7 @@ trader names as well as the traders returns and its available funds
 DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
 Trader_Name VARCHAR(64) PRIMARY KEY,
-Available_Funds DOUBLE,
+Available_Funds DOUBLE(10, 2),
 Team VARCHAR(64)
 );
 
@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS Stock_Prices;
 CREATE TABLE Stock_Prices(
 Company VARCHAR(10),
 Date_of DATE,
-Price DOUBLE,
+Price DOUBLE(10, 2),
 PRIMARY KEY(Company, Date_of),
 FOREIGN KEY(Company) references Company(Company_ID)
 );
@@ -134,7 +134,7 @@ DROP PROCEDURE IF EXISTS update_stock//
 CREATE PROCEDURE update_stock
 (
 	stock_ID  VARCHAR(10),
-    new_price DOUBLE
+    new_price DOUBLE(10,2)
 )
 BEGIN
 UPDATE Stock_Prices
@@ -146,7 +146,7 @@ END //
 # AVAILABLE FUNDS BY THE PRICE PASSED IN, AND DECREMENT THEIR STOCK COUNT OF THE COMPANY'S STOCK
 # BY 1.
 DROP PROCEDURE IF EXISTS sell_stock//
-CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE, qty INT)
+CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE(10, 2), qty INT)
 	BEGIN
 		UPDATE Portfolio
 		SET Amount = Amount - qty
@@ -161,7 +161,7 @@ CREATE PROCEDURE sell_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOU
 # TRADER'S AVAILABLE FUNDS BY THE PRICE PASSED IN, AND INCREASE THE TRADER'S STOCK COUNT OF THE GIVEN
 # COMPANY BY 1.
 DROP PROCEDURE IF EXISTS buy_stock//
-CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE, qty INT)
+CREATE PROCEDURE buy_stock (stock_ID VARCHAR(10), trader VARCHAR(64), price DOUBLE(10, 2), qty INT)
 	BEGIN
     IF NOT EXISTS (SELECT * FROM Portfolio WHERE trader_name = trader AND company = stock_id)
     THEN
@@ -181,8 +181,8 @@ DROP FUNCTION IF EXISTS get_trader_value//
 CREATE FUNCTION get_trader_value (trader VARCHAR(64))
 	RETURNS DOUBLE
 	BEGIN
-		DECLARE funds DOUBLE;
-		DECLARE stock_value DOUBLE;
+		DECLARE funds DOUBLE(10,2);
+		DECLARE stock_value DOUBLE(10,2);
 		SELECT Available_Funds
 		INTO funds
 		FROM(
