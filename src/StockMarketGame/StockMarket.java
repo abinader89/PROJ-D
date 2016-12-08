@@ -340,7 +340,7 @@ public class StockMarket {
           }
         }
     } catch (Exception e) {
-      System.out.println("Something went wrong!2");
+      System.out.println("Something went wrong!");
       e.printStackTrace();
     }
   }
@@ -480,6 +480,10 @@ public class StockMarket {
           this.checkLog();
           keepGoing = true;
           break;
+        case "dl":
+          this.deleteLeague();
+          keepGoing = true;
+          break;
         case "help":
           System.out.println("Available commands are:\n[ne] - Creates a new league, enter done " +
                   "when finished specifying new traders to add to this league.\n[up] - Updates" +
@@ -500,6 +504,21 @@ public class StockMarket {
   }
   
   /**
+   * Deletes a league and every player in it.
+   */
+  private void deleteLeague() {
+    System.out.println("Delete which league?");
+    String leagueName = sc.next();
+    String delete = "DELETE FROM league WHERE league_name = " + "'" + leagueName + "';";
+    try {
+      this.executeUpdate(this.conn, delete);
+    } catch (SQLException e) {
+      System.out.println("Something went wrong!");
+    }
+    System.out.println("League " + leagueName + " deleted.");
+  }
+  
+  /**
    * Displays the transaction log.
    */
   private void checkLog() {
@@ -510,7 +529,8 @@ public class StockMarket {
    * Displays all of the traders in the database.
    */
   private void viewTraders() {
-    String viewLeaguesQuery = "SELECT trader_name, league FROM TRADERS ORDER BY league;";
+    String viewLeaguesQuery = "SELECT trader_name, league_name FROM Traders JOIN League ON " +
+            "traders.league_id = league.id ORDER BY league_name;";
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
@@ -531,7 +551,8 @@ public class StockMarket {
    * Displays all of the leagues in the database.
    */
   private void viewLeagues() {
-    String viewLeaguesQuery = "SELECT DISTINCT(league) FROM TRADERS;";
+    String viewLeaguesQuery = "SELECT DISTINCT(league_name) FROM Traders JOIN League ON traders" +
+            ".league_id = league.id ORDER BY league_name;";
     ResultSet rs;
     try {
       rs = this.executeQuery(this.conn, viewLeaguesQuery);
