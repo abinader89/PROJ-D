@@ -492,7 +492,8 @@ public class StockMarket {
                   "game.\n[de] - Deletes a trader from the database.\n[vl] - Show the " +
                   "leagues in the database.\n[vt] - Shows the traders in the database.\n[pr] - " +
                   "Check the current rates of stocks available.\n[cl] - Checks the " +
-                  "transaction log on the database.\n[help] - Displays this information.");
+                  "transaction log on the database.\n[dl] - Deletes a league and all " +
+                  "traders that belong to it.\n[help] - Displays this information.");
           keepGoing = true;
           break;
         default:
