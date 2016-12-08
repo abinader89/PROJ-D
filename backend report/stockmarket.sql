@@ -42,6 +42,31 @@ INSERT INTO `Company` VALUES ('AAPL','Apple','Tim Cook',129847382),('AMZN','Amaz
 UNLOCK TABLES;
 
 --
+-- Table structure for table `League`
+--
+
+DROP TABLE IF EXISTS `League`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `League` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `League_Name` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `League_Name` (`League_Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `League`
+--
+
+LOCK TABLES `League` WRITE;
+/*!40000 ALTER TABLE `League` DISABLE KEYS */;
+INSERT INTO `League` VALUES (4,'bi');
+/*!40000 ALTER TABLE `League` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Portfolio`
 --
 
@@ -65,7 +90,6 @@ CREATE TABLE `Portfolio` (
 
 LOCK TABLES `Portfolio` WRITE;
 /*!40000 ALTER TABLE `Portfolio` DISABLE KEYS */;
-INSERT INTO `Portfolio` VALUES ('goog','a',1);
 /*!40000 ALTER TABLE `Portfolio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,8 +129,10 @@ DROP TABLE IF EXISTS `Traders`;
 CREATE TABLE `Traders` (
   `Trader_Name` varchar(64) NOT NULL,
   `Available_Funds` double(10,2) DEFAULT NULL,
-  `League` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`Trader_Name`)
+  `League_ID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Trader_Name`),
+  KEY `league_fk` (`League_ID`),
+  CONSTRAINT `league_fk` FOREIGN KEY (`League_ID`) REFERENCES `League` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -116,7 +142,7 @@ CREATE TABLE `Traders` (
 
 LOCK TABLES `Traders` WRITE;
 /*!40000 ALTER TABLE `Traders` DISABLE KEYS */;
-INSERT INTO `Traders` VALUES ('a',4205.54,'LEAGUE_1'),('b',5000.00,'LEAGUE_1'),('c',5000.00,'LEAGUE_1'),('d',5000.00,'LEAGUE_1'),('e',5000.00,'LEAGUE_B'),('f',5000.00,'LEAGUE_B'),('g',5000.00,'LEAGUE_B'),('h',5000.00,'LEAGUE_B');
+INSERT INTO `Traders` VALUES ('1',5000.00,4),('2',5000.00,4),('3',5000.00,4);
 /*!40000 ALTER TABLE `Traders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +154,7 @@ DROP TABLE IF EXISTS `Transactions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Transactions` (
-  `transaction_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `transaction_ID` int(10) NOT NULL AUTO_INCREMENT,
   `Date_of` date DEFAULT NULL,
   `Company_ID` varchar(10) DEFAULT NULL,
   `Trader` varchar(64) DEFAULT NULL,
@@ -139,7 +165,7 @@ CREATE TABLE `Transactions` (
   KEY `company_fk` (`Company_ID`),
   CONSTRAINT `company_fk` FOREIGN KEY (`Company_ID`) REFERENCES `Company` (`Company_ID`),
   CONSTRAINT `trader_fk` FOREIGN KEY (`Trader`) REFERENCES `Traders` (`Trader_Name`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +174,6 @@ CREATE TABLE `Transactions` (
 
 LOCK TABLES `Transactions` WRITE;
 /*!40000 ALTER TABLE `Transactions` DISABLE KEYS */;
-INSERT INTO `Transactions` VALUES (3,'2016-12-07','goog','a',2,'TRUE'),(4,'2016-12-07','goog','a',1,'FALSE');
 /*!40000 ALTER TABLE `Transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -161,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-07 12:42:48
+-- Dump completed on 2016-12-07 19:55:18

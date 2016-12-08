@@ -2,6 +2,16 @@ DROP DATABASE IF EXISTS StockMarket;
 CREATE DATABASE IF NOT EXISTS StockMarket;
 USE StockMarket;
 
+/**
+Table that maps out leagues to an ID
+ */
+DROP TABLE IF EXISTS League;
+CREATE TABLE League (
+	id INT(10) AUTO_INCREMENT,
+	League_Name VARCHAR(64) UNIQUE,
+	PRIMARY KEY (id)
+);
+
 /*
 trader names as well as the traders returns and its available funds
 */
@@ -9,7 +19,8 @@ DROP TABLE IF EXISTS Traders;
 CREATE TABLE Traders (
 Trader_Name VARCHAR(64) PRIMARY KEY,
 Available_Funds DOUBLE(10, 2),
-League VARCHAR(64)
+League_ID INT,
+CONSTRAINT league_fk FOREIGN KEY(League_ID) REFERENCES League(id) ON DELETE CASCADE
 );
 
 /*
@@ -26,13 +37,15 @@ CEO Varchar(64),
 OutStanding_Shares INT 
 );
 
+
+
 /*
 list of transactions 
 for when a person buys/sells a stock
 */
 DROP TABLE IF EXISTS Transactions;
 CREATE TABLE Transactions(
-transaction_ID INT auto_increment,
+transaction_ID INT(10) auto_increment,
 Date_of DATE,
 Company_ID VARCHAR(10),
 Trader VARCHAR(64),
