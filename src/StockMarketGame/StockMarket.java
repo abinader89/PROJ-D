@@ -281,7 +281,7 @@ public class StockMarket {
    */
   private void standings() {
     String viewStockInfo = "SELECT trader_name, get_trader_value(trader_name) AS Total_Value " +
-            "FROM Traders WHERE league = (SELECT league FROM Traders WHERE trader_name = '"
+            "FROM Traders WHERE league_ID = (SELECT league_ID FROM Traders WHERE trader_name = '"
             + this.characterName + "') ORDER BY total_value;";
     ResultSet rs;
     try {
@@ -594,20 +594,27 @@ public class StockMarket {
           this.isExit("exit");
         default:
           System.out.println("Invalid input!");
-          
       }
     }
     List<String> players = new ArrayList<String>();
     this.addTraders(players);
     try {
+      String insertLeague = "INSERT INTO League VALUES(DEFAULT, '" + leagueName + "');";
+      this.executeUpdate(this.conn, insertLeague);
+      String getLeagueID = "SELECT id FROM League WHERE League_name = '" + leagueName + "';";
+      ResultSet rs = this.executeQuery(this.conn, getLeagueID);
+      if (!rs.next()) {
+        System.out.println("Operation Failed!");
+      }
+      int leagueID = Integer.valueOf(rs.getString("id"));
+      System.out.println(leagueID);
       StringBuilder insertTraders = new StringBuilder("INSERT INTO Traders VALUES("
-              + "'" + players.get(0) + "', 5000," + "'" + leagueName + "')");
+              + "'" + players.get(0) + "', 5000, " + leagueID + ")");
       if (players.size() == 1) {
         insertTraders.append(";");
       } else {
         for (int ii = 1; ii < players.size(); ii++) {
-          insertTraders.append(", (" + "'" + players.get(ii) + "', 5000," + "'" + leagueName +
-                  "')");
+          insertTraders.append(", ('" + players.get(ii) + "', 5000, " + leagueID +")");
           if (ii == players.size() - 1) {
             insertTraders.append(";");
           }
