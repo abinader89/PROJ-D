@@ -55,6 +55,12 @@ public class StockMarket {
   // Name of character, dependent on user input
   private String characterName;
   
+  // Name of company
+  private String company;
+  
+  // Quantity specified
+  private int qty;
+  
   // The name of the computer running MySQL
   private final String serverName = "localhost";
   
@@ -301,17 +307,10 @@ public class StockMarket {
    * Sells stock if the trader has enough of it in inventory.
    */
   private void sellStock() {
-    String company = null;
-    int qty = -1;
+    this.company = null;
+    this.qty = -1;
     try {
-      System.out.println("Input company ID & Quantity\nCompany?");
-      company = sc.next();
-      System.out.println("Quantity?");
-      qty = sc.nextInt();
-      if (qty < 1) {
-        IllegalArgumentException error = new IllegalArgumentException();
-        throw error;
-      }
+      this.specifyTransactionDetails();
     } catch (InputMismatchException|IllegalArgumentException e) {
         System.err.println("Please input a natural integer value for quantity.");
       return;
@@ -352,21 +351,25 @@ public class StockMarket {
     }
   }
   
+  private void specifyTransactionDetails() {
+    System.out.println("Input company ID & Quantity\nCompany?");
+    this.company = sc.next();
+    System.out.println("Quantity?");
+    this.qty = sc.nextInt();
+    if (qty < 1) {
+      IllegalArgumentException error = new IllegalArgumentException();
+      throw error;
+    }
+  }
+  
   /**
    * Buys stock if the trader has enough capital.
    */
   private void buyStock() {
-    String company = null;
-    int qty = -1;
+    this.company = null;
+    this.qty = -1;
     try {
-      System.out.println("Input company ID & Quantity\nCompany?");
-      company = sc.next();
-      System.out.println("Quantity?");
-      qty = sc.nextInt();
-      if (qty < 1) {
-        IllegalArgumentException error = new IllegalArgumentException();
-        throw error;
-      }
+      this.specifyTransactionDetails();
     } catch (InputMismatchException|IllegalArgumentException e) {
       System.err.println("Please input a natural integer value for quantity.");
       return;
