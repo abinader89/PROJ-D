@@ -225,15 +225,12 @@ public class StockMarket {
           break;
         case "se":
           this.sellStock();
-          // CALL PROCEDURE TO SELL STOCK SPECIFIED AMOUNT OF STOCKS
           break;
         case "in":
           this.checkInventory();
           break;
         case "st":
-          // CHECK THE STANDINGS
           this.standings();
-          // CALL THE PROCEDURE TO CHECK THE STANDINGS
           break;
         case "pr":
           this.displayCurrentStockInformation();
@@ -716,5 +713,3 @@ public class StockMarket {
     app.run();
   }
 }
-
-
