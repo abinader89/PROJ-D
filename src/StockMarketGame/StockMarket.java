@@ -584,11 +584,13 @@ public class StockMarket {
   private void resetTraders() {
     try {
       String resetTradersTable = "DELETE FROM Traders;";
+      String resetLeagueTable = "DELETE FROM League;";
       this.executeUpdate(this.conn, resetTradersTable);
+      this.executeUpdate(this.conn, resetLeagueTable);
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    System.out.println("Traders data reset!");
+    System.out.println("Data reset!");
     this.adminStart();
   }
   
