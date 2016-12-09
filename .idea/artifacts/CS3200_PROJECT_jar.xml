@@ -3,12 +3,12 @@
     <output-path>$PROJECT_DIR$/out/artifacts/CS3200_PROJECT_jar</output-path>
     <root id="archive" name="CS3200-PROJECT.jar">
       <element id="module-output" name="CS3200-PROJECT" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/src/lib/jboss-common-jdbc-wrapper.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/src/lib/c3p0-0.9.1-pre6.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/src/lib/c3p0-0.9.1-pre6.src.zip" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/src/lib/jboss-common-jdbc-wrapper-src.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/src/lib/slf4j-api-1.6.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
