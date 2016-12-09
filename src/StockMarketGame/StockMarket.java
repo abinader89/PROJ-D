@@ -301,10 +301,21 @@ public class StockMarket {
    * Sells stock if the trader has enough of it in inventory.
    */
   private void sellStock() {
-    System.out.println("Input company ID & Quantity\nCompany?");
-    String company = sc.next();
-    System.out.println("Quantity?");
-    int qty = sc.nextInt();
+    String company = null;
+    int qty = -1;
+    try {
+      System.out.println("Input company ID & Quantity\nCompany?");
+      company = sc.next();
+      System.out.println("Quantity?");
+      qty = sc.nextInt();
+      if (qty < 1) {
+        IllegalArgumentException error = new IllegalArgumentException();
+        throw error;
+      }
+    } catch (InputMismatchException|IllegalArgumentException e) {
+        System.err.println("Please input a natural integer value for quantity.");
+      return;
+      }
     String currentFundsQuery = "SELECT available_funds FROM traders WHERE trader_name = '"
             + characterName + "'";
     String currentStockQuery = "SELECT Amount FROM PORTFOLIO WHERE company = '" + company + "' " +
@@ -318,27 +329,26 @@ public class StockMarket {
       if (!rs0.next()
               || !rs1.next()
               || !rs2.next()) {
-        System.out.println("Something went wrong!");
+        System.err.println("Something went wrong!");
       } else {
         int stockOwned = (Integer) rs0.getObject("Amount");
         double price = (Double) rs1.getObject("Price");
         double funds = (Double) rs2.getObject("available_funds");
-          System.out.println("Stock owned: " + stockOwned + " ...attempting to sell " + qty
-                  + " at $" + price * qty + " ($" + price + " each)");
-          if (stockOwned >= qty) {
-            String sellCall = "CALL sell_stock('" + company + "', " + "'" + this.characterName
-                    + "', " + price + ", " + qty + ");";
-            executeUpdate(this.conn, sellCall);
-            System.out.println(qty + " stock(s) sold from " + company.toUpperCase());
-            System.out.println("Operation successful.");
-            System.out.println("Remaining balance ...$" + (funds + (price * qty)));
-          } else {
-            System.out.println("Insufficient stocks for transaction.");
-          }
+        System.out.println("Stock owned: " + stockOwned + " ...attempting to sell " + qty
+                + " at $" + price * qty + " ($" + price + " each)");
+        if (stockOwned >= qty) {
+          String sellCall = "CALL sell_stock('" + company + "', " + "'" + this.characterName
+                  + "', " + price + ", " + qty + ");";
+          executeUpdate(this.conn, sellCall);
+          System.out.println(qty + " stock(s) sold from " + company.toUpperCase());
+          System.out.println("Operation successful.");
+          System.out.println("Remaining balance ...$" + (funds + (price * qty)));
+        } else {
+          System.err.println("Insufficient stocks for transaction.");
         }
-    } catch (Exception e) {
-      System.out.println("Something went wrong!");
-      e.printStackTrace();
+      }
+    } catch (SQLException e) {
+      System.err.println("No company found!");
     }
   }
   
@@ -346,16 +356,27 @@ public class StockMarket {
    * Buys stock if the trader has enough capital.
    */
   private void buyStock() {
+    String company = null;
+    int qty = -1;
+    try {
+      System.out.println("Input company ID & Quantity\nCompany?");
+      company = sc.next();
+      System.out.println("Quantity?");
+      qty = sc.nextInt();
+      if (qty < 1) {
+        IllegalArgumentException error = new IllegalArgumentException();
+        throw error;
+      }
+    } catch (InputMismatchException|IllegalArgumentException e) {
+      System.err.println("Please input a natural integer value for quantity.");
+      return;
+    }
     String currentFundsQuery = "SELECT available_funds FROM traders WHERE trader_name = '"
             + this.characterName + "';";
     try {
       ResultSet rs0 = this.executeQuery(this.conn, currentFundsQuery);
       if (rs0.next()) {
         double funds = (Double) rs0.getObject("available_funds");
-        System.out.println("Input company ID & Quantity\nCompany?");
-        String company = sc.next();
-        System.out.println("Quantity?");
-        int qty = sc.nextInt();
         String priceQuery = "SELECT PRICE FROM stock_prices where company = '" + company + "';";
         ResultSet rs1 = this.executeQuery(this.conn, priceQuery);
         if (!rs1.next()) {
@@ -376,7 +397,7 @@ public class StockMarket {
         }
       }
     } catch (Exception e) {
-      System.out.println("Something went wrong!");
+      System.out.println("No company found!");
     }
   }
   
@@ -418,7 +439,7 @@ public class StockMarket {
     
       StringBuilder sb = new StringBuilder();
       while (rs.next()) {
-        sb.append(String.format("%4s", rs.getString(1)));
+        sb.append(String.format("%4s", rs.getString(1).toUpperCase()));
         sb.append("     |  " + rs.getString(2) + "\n");
       }
       System.out.print(sb.toString());
