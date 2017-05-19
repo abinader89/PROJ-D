@@ -14,14 +14,8 @@ After any prompt by the program, enter help for a list of commands.
 
 ### Needed procedures ###
 
-We still need a procedure that given a stock, will decrement the amount of that stock in the inventory of the trader and increment that traders $$$ field by the
-appropriate amount at the given date.
-I am planning on using a counted for loop to call this procedure the specified number of times.
-
-We still need a procedure that given a stock, will increment the amount of that stock in the inventory of the trader and decrement that traders $$$ field by the
-appropriate amount at the given date.
-I am planning on using a counted for loop to call this procedure the specified amount of times.
+Finished
 
 ### Needed triggers ###
 
-Unknown at this time.
+Finished
